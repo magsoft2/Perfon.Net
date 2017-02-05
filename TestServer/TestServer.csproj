@@ -104,13 +104,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PerfMonLib.Core\PerfMonLib.Core.csproj">
+    <ProjectReference Include="..\Perfon.Core\Perfon.Core.csproj">
       <Project>{15ea05e4-0bcf-4a35-b177-59b932869414}</Project>
-      <Name>PerfMonLib.Core</Name>
+      <Name>Perfon.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PerfMonLib.WebApi\PerfMonLib.WebApi.csproj">
+    <ProjectReference Include="..\Perfon.WebApi\Perfon.WebApi.csproj">
       <Project>{312a6ad5-c6fe-40ec-a923-a24c1620466c}</Project>
-      <Name>PerfMonLib.WebApi</Name>
+      <Name>Perfon.WebApi</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
