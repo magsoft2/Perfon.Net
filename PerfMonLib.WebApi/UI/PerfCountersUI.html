@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Performance Counters UI</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+
+    </style>
+
+</head>
+<body>
+
+    <script type="text/javascript">
+
+        var uri = 'perfcounters';
+
+        $(document).ready(function () {
+
+            refresh();
+        });
+
+        function refresh() {
+            $.get(uri, function (data, status) {
+                
+                //$("#logs").html(JSON.stringify(data));
+
+                var ctrl = $("#perfCounterName");
+                for(let i=0;i<data.length;i++)
+                {
+                    ctrl.append('<option value="'+data[i]+'">'+data[i]+'</option>');
+                }
+            });
+        }
+
+        function getPerfCounterTrack(name)
+        {
+            if(name === undefined || name ==='')
+            {
+                return;
+            }
+
+            $.get(uri+'?name='+escape(name), function (data, status) {
+                
+                //$("#logs").html(JSON.stringify(data));
+
+                var text = '';
+                for(let i=0;i<data.length;i++)
+                {
+                    text += JSON.stringify(data[i]);
+                }
+                $("#logs").text(text);
+            });
+        }
+
+    </script>
+
+    <button onclick="refresh()">Refresh</button>
+    <div id="logs">
+    </div>
+    <div>Select perf counter</div>
+    <select id="perfCounterName" onchange="getPerfCounterTrack(this.value)">
+        <option value=""></option>'
+    </select>
+
+</body>
+</html>
