@@ -1,0 +1,11 @@
+packages
+/PerfMonLib.WebApi/bin/Debug
+/PerfMonLib.WebApi/bin/Release
+/PerfMonLib.WebApi/obj/Debug
+/PerfMonLib.WebApi/obj/Release
+/PerfMonLib.Core/bin/Debug
+/PerfMonLib.Core/bin/Release
+/PerfMonLib.Core/obj/Debug
+/PerfMonLib.Core/obj/Release
+/TestServer/bin
+/TestServer/obj/Debug
