@@ -1,9 +1,10 @@
 # Perfon.Net
 Performance monitoring .Net framework for Web Api applications with no using windows performance counters
 
-Demo page - <todo>
+Demo page - todo
 
-### Perfon.Core - core library, that monitors performance and saves it into CSV file or in embedded LightDB database (Analog of SQLLite).
+### Perfon.Core
+Core library, that monitors performance and saves it into CSV file or in embedded LightDB database (Analog of SQLLite).
 It do not uses windows perfomance counters, so it could used with non-privileged rights. 
 For example, it could be used on the shared hosting plans, when you have no access to IIS or OS. 
 A list of implemented performance counters:
@@ -20,14 +21,15 @@ A list of implemented performance counters:
 
 
 
-### Perfon.WebApi - a wrapper for painless use Perfon with Web Api 2 projects.
+### Perfon.WebApi 
+A wrapper for painless use Perfon with Web Api 2 projects.
 It provides Web Api for getting perf. counters through Web by /perfcounters and /perfcounters?name=perfcounterName
 Also it provides /perfcountersUI API, which return a html page with counters visualiation dashboard.
 	How to use:
 1. Add a reference to Perfon.WebApi.
 2. Use it after Web Api application config:
 ```c#
-	GlobalConfiguration.Configure(WebApiConfig.Register); //your Web App initialization
+	GlobalConfiguration.Configure(WebApiConfig.Register); //your Web App initialization code
 	
 	PerfMonitor = new PerfMonitorForWebApi();
     //PerfMonitor.RegisterCSVFileStorage(AppDomain.CurrentDomain.BaseDirectory + "\\perf.csv"); -> use it if you want to save counters to CSV file
@@ -37,11 +39,14 @@ Also it provides /perfcountersUI API, which return a html page with counters vis
     PerfMonitor.Start(GlobalConfiguration.Configuration, 2000, 0, true);
 ```
 
-### TestServer - example of using Perfon.WebApi. One could run and monitor with Perfon using JMeterTests stress tests.
+### TestServer
+Example of using Perfon.WebApi. One could run and monitor with Perfon using JMeterTests stress tests.
 
 ---
 
 ### TODO:
-Perfon.WebMVC - a wrapper for painless use Perfon with Asp.Net MVC projects.
-TestServer.MVC
-Improve dashboard
+* Demo site
+* Perfon.WebMVC - a wrapper for painless use Perfon with Asp.Net MVC projects.
+* TestServer.MVC
+* Improve dashboard
+* Add more perf counters
