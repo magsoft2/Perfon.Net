@@ -1,11 +1,20 @@
 ﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
     <title>Performance Counters UI</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.css" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js" integrity="sha384-Plbmg8JY28KFelvJVai01l8WyZzrYWG825m+cZ0eDDS1f7d/js6ikvy1+X+guPIB" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+	<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.0.0/dygraph.js"></script>
 
     <style>
 
@@ -14,57 +23,31 @@
 </head>
 <body>
 
-    <script type="text/javascript">
+    
 
-        var uri = 'perfcounters';
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">Perfon.Net</a>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Git</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-        $(document).ready(function () {
-
-            refresh();
-        });
-
-        function refresh() {
-            $.get(uri, function (data, status) {
-                
-                //$("#logs").html(JSON.stringify(data));
-
-                var ctrl = $("#perfCounterName");
-                for(let i=0;i<data.length;i++)
-                {
-                    ctrl.append('<option value="'+data[i]+'">'+data[i]+'</option>');
-                }
-            });
-        }
-
-        function getPerfCounterTrack(name)
-        {
-            if(name === undefined || name ==='')
-            {
-                return;
-            }
-
-            $.get(uri+'?name='+escape(name), function (data, status) {
-                
-                //$("#logs").html(JSON.stringify(data));
-
-                var text = '';
-                for(let i=0;i<data.length;i++)
-                {
-                    text += JSON.stringify(data[i]);
-                }
-                $("#logs").text(text);
-            });
-        }
-
-    </script>
-
-    <button onclick="refresh()">Refresh</button>
-    <div id="logs">
+    <!-- Begin page content -->
+    <div class="container" style="padding: 60px 15px 0;">
+        PLACEHOLDER_FOR_PANEL
     </div>
-    <div>Select perf counter</div>
-    <select id="perfCounterName" onchange="getPerfCounterTrack(this.value)">
-        <option value=""></option>'
-    </select>
+
 
 </body>
 </html>

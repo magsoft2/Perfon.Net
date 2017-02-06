@@ -16,7 +16,6 @@ namespace Perfon.WebApi
     /// Web Api Controller for retrieving perf counters, available by default for PerfLib clients
     /// </summary>
     [EnableCors(origins: "*", headers: "*", methods: "GET")]
-    //[RoutePrefix(RouteConstants.RouteStart_Api+"/test")]
     [AuthPerfMonitorLibActions]
     public class PerfCountersController : ApiController
     {
@@ -37,9 +36,7 @@ namespace Perfon.WebApi
         /// Get counters list
         /// </summary>
         /// <returns></returns>
-        //[Route("api/perfmonitor/counters")]        
-        //[HttpGet]
-
+        [Route("api/perfcounters")]        
         public async Task<IHttpActionResult> Get()
         {
             var res = MemoryCache.Default.Get(keyList);
@@ -59,8 +56,7 @@ namespace Perfon.WebApi
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        //[Route("api/perfmonitor/counters/{name}")]
-        //[HttpGet]
+        [Route("api/perfcounters")] ///{*name}
         public async Task<IHttpActionResult> Get([FromUri]string name, [FromUri]DateTime? date = null)
         {
             string key = name+date.GetHashCode();

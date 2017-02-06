@@ -242,7 +242,6 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">D:\MyProgs\iDoIt\iDoIt\PerfMonLib\JMeterTests\StressTest_TestService_res.jtl</stringProp>
         </ResultCollector>
         <hashTree/>
         <ResultCollector guiclass="GraphVisualizer" testclass="ResultCollector" testname="Graph Results" enabled="false">
@@ -314,7 +313,6 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">D:\MyProgs\iDoIt\iDoIt\PerfMonLib\JMeterTests\StressTest_TestService_res.jtl</stringProp>
           <stringProp name="RespTimeGraph.interval">1000</stringProp>
           <stringProp name="RespTimeGraph.yaxisscalemaxvalue">300</stringProp>
         </ResultCollector>

@@ -1,0 +1,126 @@
+﻿<nav class="navbar navbar-light" style="background-color: #e3f2fd; width: 300px">
+    <form class="form-inline">
+        <label class="col-1">Date </label>
+        <input class="form-control" type="date" id="date1" aria-label="Selected date" onchange="refresh()">
+    </form>
+</nav>
+<div class="card card-block">
+    <form class="form-inline">
+        <label class="col-2">Select perf counter</label>
+        <select class="form-control" id="perfCounterName" onchange="perCounterNameChange(this.value)" style="width: 300px">
+            <option value=""></option>
+        </select>
+    </form>
+    <div id="chart1" style="width: 600px; height: 300px;"></div>
+    <div id="logs">
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+    var uri = 'perfcounters';
+
+    var dataArr = [[0,0]];
+
+    var dyg = ResetGraph("chart1");
+
+    function ResetGraph(id)
+    {
+        dataArr = [[0,0]];
+
+        return new Dygraph(
+          document.getElementById(id),
+          dataArr,              
+          {
+              customBars: false,
+              delimiter : ';',
+              title: 'none',
+              ylabel: '',
+              legend: 'always',
+              labels: [ "Time", "Val" ],
+              showRangeSelector: true,
+              drawPoints: true
+              //showRoller: true
+          }
+        );
+    }
+
+    $(document).ready(function () {
+
+        $("#date1").val(new Date().toISOString().split('T')[0]);
+
+        refresh();
+    });
+
+    function refresh() {
+
+        dyg = ResetGraph("chart1");
+
+        getPerfCountersList().then(function(data)
+        {
+            var ctrl = $("#perfCounterName");
+            ctrl.find('option').remove();
+            ctrl.append('<option value=""></option>');
+            for(let i=0;i<data.length;i++)
+            {
+                ctrl.append('<option value="'+data[i]+'">'+data[i]+'</option>');
+            }
+        });
+    }
+    function perCounterNameChange(name){
+        if(name === undefined || name ==='')
+        {
+            return;
+        }
+        var date = $("#date1").val();
+        getPerfCounterTrack(name, date).then(function(data)
+        {
+            var text = '';
+            if(dataArr === undefined)
+            {
+                dataArr = [];
+            }
+            dataArr.length = 0;
+            var lastTime = new Date();
+            for(let i=0;i<data.length;i++)
+            {
+                lastTime = new Date(data[i].Timestamp);
+                dataArr.push([lastTime, data[i].Value]);
+                text += JSON.stringify(data[i]);
+            }
+
+            dyg.updateOptions({
+                title: name,
+                dateWindow:[lastTime-1000*60*15, lastTime],
+                'file': dataArr
+            });
+
+            $("#logs").text(text);
+        });
+    }
+
+    setInterval(PollServer, 1000);
+
+    function PollServer()
+    {
+        perCounterNameChange($("#perfCounterName").val(), $("#date1").val());
+        //var x = new Date();  // current time
+        //var y = Math.random();
+        //dataArr.push([x, y]);
+        //dyg.updateOptions( { 
+        //    'file': dataArr,
+        //     dateWindow:[dyg.dateWindow_[0],x]
+        //} );
+    }
+        
+    function getPerfCountersList(){
+        return $.get(uri);
+
+    }
+    function getPerfCounterTrack(name, date){
+        return $.get(uri+'?name='+encodeURI(name)+'&date='+date);
+    }
+
+</script>

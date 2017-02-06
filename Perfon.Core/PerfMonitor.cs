@@ -26,6 +26,24 @@ namespace Perfon.Core
         public event EventHandler<ErrorEventArgs> OnError;
 
         /// <summary>
+        /// Settings for Perfon engine
+        /// </summary>
+        public PerfonConfiguration Configuration { get; set; }
+
+        
+        public PerfMonitor()
+        {
+            Configuration = new PerfonConfiguration();
+
+            GenerateDefaultPerfCounters();
+
+            foreach (var item in countersList.Values)
+            {
+                countersListGeneric.Add(item as IPerformanceCounter);
+            }
+        }
+
+        /// <summary>
         /// Shortcuts for main perf counters which should be process\calculated by external classes.
         /// </summary>
         public IPerformanceCounter ExceptionsNum
@@ -84,7 +102,7 @@ namespace Perfon.Core
         /// User should himself take care of calcualting this counter  
         /// </summary>
         /// <param name="counter"></param>
-        public void AddUserCumstomPerfCounter(IPerformanceCounter counter)
+        public void AddUserCustomPerfCounter(IPerformanceCounter counter)
         {
             countersList.Add(counter.Name, counter);
             countersListGeneric.Add(counter);
@@ -108,19 +126,10 @@ namespace Perfon.Core
         }
 
 
-        public PerfMonitor()
-        {
-            GenerateDefaultPerfCounters();
-
-            foreach (var item in countersList.Values)
-            {
-                countersListGeneric.Add(item as IPerformanceCounter);
-            }
-        }
 
         private void GenerateDefaultPerfCounters()
         {
-            /// Should be calculated externally
+            /// Should be calculated externally (out of this class). Calculations are implemented inside WebApi/MVC MessageHandlers/Filters
             requestNum = new PerformanceSumCounter("RequestsCount, num/sec");
             countersList.Add(RequestNum.Name, requestNum);
 
@@ -165,59 +174,62 @@ namespace Perfon.Core
         /// Register perf counter storages
         /// </summary>
         /// <param name="storage"></param>
-        public IPerfomanceCountersStorage RegisterStorages(params IPerfomanceCountersStorage[] storage)
+        public IPerfomanceCountersStorage RegisterStorages(params IPerfomanceCountersStorage[] storages)
         {
-            storagesList.AddRange(storage);
+            storagesList.AddRange(storages);
 
-            return storage[0];
-        }
-        public IPerfomanceCountersStorage RegisterCSVFileStorage(string filePathName)
-        {
-            var storage = new PerfCounterCSVFileStorage(filePathName);
-            storage.OnError += (a, b) =>
-                {
+            foreach (var st in storages)
+            {
+                st.OnError += (a, b) => {
                     if (OnError != null)
                     {
                         OnError(a,b);
                     }
                 };
+            }
+
+            return storages[0];
+        }
+        /// <summary>
+        /// Easy register some default laready implemented storages, if needed
+        /// </summary>
+        /// <param name="dbPath"></param>
+        /// <returns></returns>
+        public IPerfomanceCountersStorage RegisterCSVFileStorage(string dbPath)
+        {
+            var storage = new PerfCounterCSVFileStorage(dbPath);
             return RegisterStorages(storage);
         }
-        public IPerfomanceCountersStorage RegisterLiteDbStorage(string dbPathName)
+        public IPerfomanceCountersStorage RegisterLiteDbStorage(string dbPath)
         {
-            var storage = new PerfCounterLiteDbStorage(dbPathName);
-            storage.OnError += (a, b) =>
-            {
-                if (OnError != null)
-                {
-                    OnError(a, b);
-                }
-            };
+            var storage = new PerfCounterLiteDbStorage(dbPath);
+            return RegisterStorages(storage);
+        }
+        public IPerfomanceCountersStorage RegisterInMemoryCacheStorage(long expirationInSeconds)
+        {
+            var storage = new PerfCounterInMemoryCacheStorage(expirationInSeconds);
             return RegisterStorages(storage);
         }
         /// <summary>
         /// Start polling and saving perf counters. Period is in ms
         /// </summary>
         /// <param name="pollPeriod_ms">Poll period, ms</param>
-        public void Start(int pollPeriod_ms, int doNotStorePerfCountersIfReqLessOrEqThan = -1, int? minPollPeriod = null, int? maxPollPeriod = null)
+        public void Start(int pollPeriod_ms)
         {
             AppDomain.MonitoringIsEnabled = true;
 
             PollPeriod = pollPeriod_ms;
             PollPeriod_RevSec = 1.0f / (PollPeriod/1000.0f);
 
-            MaxPollPeriod = maxPollPeriod;
-            minPollPeriod = MinPollPeriod;
-
-            DoNotStorePerfCountersIfReqLessOrEqThan = doNotStorePerfCountersIfReqLessOrEqThan;
-
             //Tune perf counters scale coefficients
             cpuUsage.PostProcessMultiplyCoeff = 100 * 1.0f / 1000 * PollPeriod_RevSec;
+            //Notify all counters about poll period value
             foreach (var item in countersList.Values)
             {
                 (item as IPerformanceCounter).ReversedPeriodValue = PollPeriod_RevSec;
             }
 
+            //Restart timer if needed
             if (timer != null)
             {
                 timer.Dispose();
@@ -245,13 +257,9 @@ namespace Perfon.Core
         private int PollPeriod { get; set; }
         private float PollPeriod_RevSec { get; set; }
 
-        private int? MinPollPeriod { get; set; }
-        private int? MaxPollPeriod { get; set; }
-
-        private int DoNotStorePerfCountersIfReqLessOrEqThan { get; set; }
 
         /// <summary>
-        /// Should be process by external classes
+        /// Should be process by external classes. Implemented in WebApi and MVC wrapper libs.
         /// </summary>
         private IPerformanceCounter exceptionsNum;
         private IPerformanceCounter badStatusNum;
@@ -281,6 +289,7 @@ namespace Perfon.Core
             {
                 CollectInternalCounters();
 
+                //Check and notify about threshold violations occured
                 foreach (var item in countersListGeneric)
                 {
                     foreach (var thr in item.Thresholds)
@@ -290,7 +299,7 @@ namespace Perfon.Core
                 }
 
                 double count = requestNum.GetValue();
-                if (count > DoNotStorePerfCountersIfReqLessOrEqThan)
+                if (count > Configuration.DoNotStorePerfCountersIfReqLessOrEqThan)
                 {
                     var listTemp = countersListGeneric.Select(a =>a.GetPerfCounterData()).ToList();
                     

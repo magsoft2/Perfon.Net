@@ -9,6 +9,10 @@ using Perfon.Core.PerfCounters;
 
 namespace Perfon.Core.PerfCounterStorages
 {
+    /// <summary>
+    /// Driver for store/restore performance counter values in LiteDb.
+    /// Fie names are one per date: perfCounters_yyyy-MM-dd.litedb
+    /// </summary>
     public class PerfCounterLiteDbStorage : IPerfomanceCountersStorage
     {
         private string PathToDbFolder { get; set; }
@@ -74,12 +78,6 @@ namespace Perfon.Core.PerfCounterStorages
 
             return Task.Delay(0);
         }
-
-        private static string GetDbName(DateTime now)
-        {
-            return "perfCounters_" + now.ToString("yyyy-MM-dd")+".litedb";
-        }
-
 
         public Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null)
         {
@@ -148,19 +146,15 @@ namespace Perfon.Core.PerfCounterStorages
             return Task.FromResult(res as IEnumerable<string>);
         }
 
-        /// <summary>
-        /// Cloass for store one counter value in LiteDb
-        /// </summary>
-        public class LiteDbPerfItem
+
+
+
+
+        private static string GetDbName(DateTime now)
         {
-            public LiteDbPerfItem()
-            {
-
-            }
-
-            public int id { get; set; }
-            public DateTime TimeStamp { get; set; }
-            public double Value { get; set; }
+            return "perfCounters_" + now.ToString("yyyy-MM-dd") + ".litedb";
         }
+
+        
     }
 }

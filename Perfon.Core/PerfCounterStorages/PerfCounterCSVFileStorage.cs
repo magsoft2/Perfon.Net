@@ -8,21 +8,19 @@ using Perfon.Core.PerfCounters;
 
 namespace Perfon.Core.PerfCounterStorages
 {
+    /// <summary>
+    /// Driver for store/restore performance counter values in simple CSV file
+    /// Fie names are one per date: perfCounters_yyyy-MM-dd.csv
+    /// </summary>
     public class PerfCounterCSVFileStorage:IPerfomanceCountersStorage
     {
-        private string PathToFile { get; set; }
+        private string PathToDb { get; set; }
 
         public string ColumnDelimiter { get; set; }
 
-        /// <summary>
-        /// Reports about errors and exceptions occured.
-        /// </summary>
-        public event EventHandler<ErrorEventArgs> OnError;
-
-
-        public PerfCounterCSVFileStorage(string pathToFile)
+        public PerfCounterCSVFileStorage(string pathToDb)
         {
-            PathToFile = pathToFile;
+            PathToDb = pathToDb+"\\";
             ColumnDelimiter = ";";
         }
 
@@ -39,7 +37,10 @@ namespace Perfon.Core.PerfCounterStorages
             {
                 var sb = new StringBuilder();
 
-                if (!File.Exists(PathToFile))
+                DateTime date = DateTime.Now.Date;
+                var dbName = GetDbName(date);
+
+                if (!File.Exists(PathToDb + dbName))
                 {
                     //store headers
                     sb.Append("time").Append(ColumnDelimiter);
@@ -57,7 +58,7 @@ namespace Perfon.Core.PerfCounterStorages
                 }
                 sb.Append(Environment.NewLine);
 
-                var file = File.AppendText(PathToFile);                
+                var file = File.AppendText(PathToDb + dbName);                
                 await file.WriteAsync(sb.ToString());
                 file.Flush();
                 file.Dispose();
@@ -71,7 +72,6 @@ namespace Perfon.Core.PerfCounterStorages
             }
         }
 
-
         public Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null)
         {
             var list = new List<PerfCounterValue>();
@@ -81,9 +81,11 @@ namespace Perfon.Core.PerfCounterStorages
                 date = DateTime.Now;
             }
 
-            if (File.Exists(PathToFile))
+            var dbName = GetDbName(date.Value);
+
+            if (File.Exists(PathToDb + dbName))
             {
-                var lines = File.ReadLines(PathToFile).GetEnumerator();
+                var lines = File.ReadLines(PathToDb + dbName).GetEnumerator();
                 if (lines != null)
                 {
                     lines.MoveNext();
@@ -114,9 +116,12 @@ namespace Perfon.Core.PerfCounterStorages
         {
             var res = new List<string>();
 
-            if (File.Exists(PathToFile))
+            DateTime date = DateTime.Now.Date;
+            var dbName = GetDbName(date);
+
+            if (File.Exists(PathToDb + dbName))
             {
-                var lines = File.ReadLines(PathToFile);
+                var lines = File.ReadLines(PathToDb + dbName);
                 if (lines != null)
                 {
                     var line = lines.FirstOrDefault();
@@ -130,5 +135,19 @@ namespace Perfon.Core.PerfCounterStorages
 
             return Task.FromResult(res as IEnumerable<string>);
         }
+
+
+        /// <summary>
+        /// Reports about errors and exceptions occured.
+        /// </summary>
+        public event EventHandler<ErrorEventArgs> OnError;
+
+
+
+        private static string GetDbName(DateTime now)
+        {
+            return "perfCounters_" + now.ToString("yyyy-MM-dd") + ".csv";
+        }
+
     }
 }

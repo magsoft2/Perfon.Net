@@ -62,13 +62,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PerfCountersUIController.cs" />
-    <Compile Include="ExceptionCounterFilter.cs" />
-    <Compile Include="AuthPerfMonitorLibActionsAttribute.cs" />
+    <Compile Include="Controllers\PerfCountersUIController.cs" />
+    <Compile Include="Filters\ExceptionCounterFilter.cs" />
+    <Compile Include="Filters\AuthPerfMonitorLibActionsAttribute.cs" />
     <Compile Include="PerfMonitorForWebApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestPerfMonitorMessageHandler.cs" />
-    <Compile Include="PerfCountersController.cs" />
+    <Compile Include="MessageHandlers\RequestPerfMonitorMessageHandler.cs" />
+    <Compile Include="Controllers\PerfCountersController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -82,6 +82,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\PerfCountersUI.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\PerfCountersUIPanel.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

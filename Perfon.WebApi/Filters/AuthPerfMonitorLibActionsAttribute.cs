@@ -21,7 +21,7 @@ namespace Perfon.WebApi
                 throw new Exception("Cannot run PerfMonLib without PerfMonitorLib property set");
             }
 
-            if (perfLib.IsPerfCountersControllerEnabled)
+            if (perfLib.Configuration.EnablePerfApi)
             {
                 base.OnActionExecuting(actionContext);
             }
@@ -41,7 +41,7 @@ namespace Perfon.WebApi
                 throw new Exception("Cannot run PerfMonLib without PerfMonitorLib property set");
             }
 
-            if (perfLib.IsPerfCountersControllerEnabled)
+            if (perfLib.Configuration.EnablePerfApi)
             {
                 return base.OnActionExecutingAsync(actionContext, cancellationToken);
             }

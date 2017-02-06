@@ -32,6 +32,11 @@ namespace Perfon.Core.PerfCounterStorages
         /// </summary>
         /// <returns></returns>
         Task<IEnumerable<string>> GetCountersList();
+
+        /// <summary>
+        /// Reports about errors and exceptions occured in the storage driver
+        /// </summary>
+        event EventHandler<ErrorEventArgs> OnError;
     }
 
 }

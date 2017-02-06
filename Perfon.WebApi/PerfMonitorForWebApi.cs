@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -18,12 +20,21 @@ namespace Perfon.WebApi
     {
         public PerfMonitor PerfMonitorBase { get; private set; }
 
-        public bool IsPerfCountersControllerEnabled { get; set; }
+        /// <summary>
+        /// Settings for Perfon engine
+        /// </summary>
+        public PerfonConfiguration Configuration
+        {
+            get
+            {
+                return PerfMonitorBase.Configuration;
+            }
+        }
 
         /// <summary>
         /// Reports about errors and exceptions occured.
         /// </summary>
-        public event EventHandler<ErrorEventArgs> OnError;
+        public event EventHandler<Perfon.Core.ErrorEventArgs> OnError;
 
 
         public PerfMonitorForWebApi()
@@ -48,22 +59,29 @@ namespace Perfon.WebApi
         {
             Storage = PerfMonitorBase.RegisterStorages(storage);
         }
-        public void RegisterCSVFileStorage(string filePathName)
+        /// <summary>
+        /// Easy register some default perf counter storages implemented in the lib, if needed
+        /// </summary>
+        /// <param name="dbPath"></param>
+        public void RegisterCSVFileStorage(string dbPath)
         {
-            Storage = PerfMonitorBase.RegisterCSVFileStorage(filePathName);
+            Storage = PerfMonitorBase.RegisterCSVFileStorage(dbPath);
         }
-        public void RegisterLiteDbStorage(string dbPathName)
+        public void RegisterLiteDbStorage(string dbPath)
         {
-            Storage = PerfMonitorBase.RegisterLiteDbStorage(dbPathName);
+            Storage = PerfMonitorBase.RegisterLiteDbStorage(dbPath);
+        }
+        public void RegisterInMemoryCacheStorage(long expirationInSeconds=60*60)
+        {
+            Storage = PerfMonitorBase.RegisterInMemoryCacheStorage(expirationInSeconds);
         }
         /// <summary>
         /// Start polling and saving perf counters. Period is in ms
         /// </summary>
         /// <param name="pollPeriod_ms">Poll period, ms</param>
-        public void Start(HttpConfiguration httpConfiguration, int pollPeriod_ms, int doNotStorePerfCountersIfReqLessOrEqThan = -1, 
-                                            bool enablePerfApiAndUI = false, int? minPollPeriod = null, int? maxPollPeriod = null)
+        public void Start(HttpConfiguration httpConfiguration, int pollPeriod_ms)
         {
-            PerfMonitorBase.Start(pollPeriod_ms, doNotStorePerfCountersIfReqLessOrEqThan, minPollPeriod, maxPollPeriod);
+            PerfMonitorBase.Start(pollPeriod_ms);
 
             httpConfiguration.Filters.Add(new ExceptionCounterFilter(this.PerfMonitorBase));
 
@@ -71,20 +89,7 @@ namespace Perfon.WebApi
 
             //httpConfiguration.Services.Add(typeof(PerfMonitorForWebApi), this);
 
-            IsPerfCountersControllerEnabled = enablePerfApiAndUI;
-
             httpConfiguration.Properties["PerfMonitorLib"] = this;
-
-            //var dic = new HttpRouteValueDictionary();
-            //dic.Add("controller", "PerfMonitorController");
-            //httpConfiguration.Routes.Insert(0, "PerfMonitorRoute", new HttpRoute(
-            ////name: "PerfMonitorRoute",
-            //routeTemplate: "api/perfmonitor2",
-            //defaults: dic, //new HttpRouteValueDictionary {  controller = "PerfMonitorController"},
-            //constraints: null
-            ////handler: new RoutSpecificHandler { InnerHandler = new HttpControllerDispatcher(config) }
-            //));
-
         }
         /// <summary>
         /// Stops perf counters polling
@@ -95,9 +100,74 @@ namespace Perfon.WebApi
         }
 
         /// <summary>
+        /// Return UI html page for monitor perf counters
+        /// </summary>
+        public Lazy<string> UIPage = new Lazy<string>(() =>
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Perfon.WebApi.UI.PerfCountersUI.html";
+
+            string result = "";
+
+            try
+            {
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+
+                        using (Stream stream2 = assembly.GetManifestResourceStream("Perfon.WebApi.UI.PerfCountersUIPanel.html"))
+                        {
+                            using (StreamReader reader2 = new StreamReader(stream2))
+                            {
+                                result = result.Replace("PLACEHOLDER_FOR_PANEL", reader2.ReadToEnd());
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                result = exc.ToString();
+            }
+
+            return result;
+        });
+        /// <summary>
+        /// Return UI html panel as div for monitor perf counters
+        /// </summary>
+        private Lazy<string> uiPanel = new Lazy<string>(() =>
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Perfon.WebApi.UI.PerfCountersUIPanel.html";
+
+            string result = "";
+
+            try
+            {
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                result = exc.ToString();
+            }
+
+            return result;
+        });
+        public string UIPanel { get { return uiPanel.Value; } }
+
+        /// <summary>
         /// Need to be removed
         /// Inject it into controller!
         /// </summary>
-        internal IPerfomanceCountersStorage Storage { get; private set; }
+        public IPerfomanceCountersStorage Storage { get; private set; }
     }
 }
