@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -24,9 +25,9 @@ namespace TestServer
             
 
             PerfMonitor = new PerfMonitorForWebApi();
-            //PerfMonitor.RegisterCSVFileStorage(AppDomain.CurrentDomain.BaseDirectory);
+            //PerfMonitor.RegisterCSVFileStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
             //PerfMonitor.RegisterInMemoryCacheStorage(60);
-            PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory);
+            PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
             PerfMonitor.OnError += (a, b) => 
             {
                 Console.WriteLine("PerfLibForWebApi:"+b.Message);

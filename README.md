@@ -2,12 +2,13 @@
 Performance monitoring .Net framework for Web Api applications with no using windows performance counters.
 Built-in REST API and UI dashboard.
 
-Demo page - todo
+[See Demo page](http://perfon.1gb.ru/api/perfcountersui "Demo page")
 
 ### Perfon.Core
 Core library, that monitors performance metrics of ypur application.
 It does not uses windows perfomance counters, so it could used with non-privileged rights. 
-It has two Storage Drivers, allowing to save counters data to CSV file or in embedded LightDB database (www.litedb.org, Analog of SQLite).
+It has three Storage Drivers, allowing to save counters data to CSV file, in embedded LightDB database (www.litedb.org, Analog of SQLite)
+or in in-memory cache.
 You could implement simple storage interface and register it for storing data in your own way.
 For example, it could be used on the shared hosting plans, when you have no access to IIS or OS. 
 A list of implemented performance counters:
@@ -62,7 +63,7 @@ Example of using Perfon.WebApi. One could run and monitor with Perfon using JMet
 ---
 
 ### TODO:
-* Demo site
+* Improve Demo site
 * Improve dashboard
 * Add description of options and conventions
 * Implement PostgreSQL storage for performance counters data.
@@ -72,4 +73,5 @@ Example of using Perfon.WebApi. One could run and monitor with Perfon using JMet
 * Add example of implementing custom counter
 * Add example of implementing own IPerfCountersStorage
 * Example of using&implementing NotificationRecievers
+* Add compariosn with win perf counters values (Kb/sec, CPU%, req/sec)
 * Cache based on tags?
