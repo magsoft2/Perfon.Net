@@ -1,38 +1,35 @@
-﻿<nav class="navbar navbar-default">
-<div class="">
-<form class="navbar-form">
-<div class="form-group">
-    <label for="selected_date">Date </label>
-    <input class="form-control" type="date" id="date1" name="selected_date" onchange="dateChange()">
-</div>
-    <div class="form-group">    
-                <div class="form-check">
-                    <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" id="checkPollId" onchange="checkPoll()" value="">
-                    Poll server
-                  </label>
-                </div>
-         </div>
-         <div class="form-group">  
-            <div class="btn btn-default" onclick="addChartBlock()">Add chart</div>
-         </div>
-</form>
-</div>
-</nav>
-
-<div id="chartsContainer">
+﻿<!--<nav class="navbar navbar-default">-->
+<div class="pane">
+    <form class="navbar-form">
+    <div class="form-group">
+        <label for="selected_date">Date </label>
+        <input class="form-control date-inp" type="date" id="date1" name="selected_date" onchange="dateChange()">
+    </div>
+        <div class="form-group">    
+                    <div class="form-check">
+                        <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="checkPollId" onchange="checkPoll()" value="">
+                        Poll server
+                      </label>
+                    </div>
+             </div>
+             <div class="form-group">  
+                <div class="btn btn-default" onclick="addChartBlock()">Add chart</div>
+             </div>
+    </form>
+    <div id="chartsContainer">
     
     </div>
+</div>
+<!--</nav>-->
+
+
 
 <style>
     .graph-block
     {
-        border:1px solid lightgray;
+        border:1px solid #8f9aab;
         padding:5px;
-    }
-    select.form-control:not([size]):not([multiple])
-    {
-        padding-top: 2px;
     }
     @media (min-width: 1600px){
         .col-lg-xl-3
@@ -40,10 +37,32 @@
             width:25%;
         }
     }
+    select.input-sm {
+        height: 21px;
+        padding: 0px;
+        background-color: #A0AEC1;
+    }
+    .date-inp
+    {
+        background-color: #A0AEC1;
+    }
+    body,.pane
+    {
+        background-color: #A0AEC1;
+    }
+    .labelsDiv
+    {
+        font-size:14px;
+    }
+
 </style>
 <script type="text/javascript">
 
-    var uri = 'perfcounters';
+    var uri = 'api/perfcounters';
+    if(window !== undefined)
+    {
+        uri = window.location.origin+ '/'+uri;
+    }
     var globalChartBlockId = 0;
 
     var graphBlocks = [];
@@ -54,11 +73,20 @@
 
         $("#date1").val(new Date().toISOString().split('T')[0]);
 
-        var num = 6;
+        var num = 8;
         for(let i=0;i<num;i++)
         {
             addChartBlock();
         }
+        graphBlocks[0].selectCounter('RequestsCount, num/sec');
+        graphBlocks[1].selectCounter('RequestProcessTime, ms');
+        graphBlocks[2].selectCounter('RequestMaxProcessTime, ms');
+        graphBlocks[3].selectCounter('CPU, %');
+        graphBlocks[4].selectCounter('KBytes req. transmitted, kb/sec');
+        graphBlocks[5].selectCounter('KBytes resp. transmitted, kb/sec');
+        graphBlocks[6].selectCounter('GC 0-gen collections, num');
+        graphBlocks[7].selectCounter('GC 1-gen collections, num');
+        //graphBlocks[8].selectCounter('BadStatusResponsesCount, num/sec');
     });
 
     function addChartBlock()
@@ -116,6 +144,8 @@
         this.graphDyg = undefined;
         this.graphBlockDOM = undefined;
         this.idx = idx;
+        this.counterNames = [];
+        this.selectedName = undefined;
 
         this.resetGraph = function(){
             this.dataArray = [[0,0]];
@@ -133,7 +163,10 @@
                   showRangeSelector: true,
                   drawPoints: true,
                   labelsDiv: lbl,       
-                  fillGraph : true
+                  fillGraph : true,
+                  colors:["#336699"],
+                  fillAlpha : 0.3,
+                  rangeSelectorAlpha: 0.4
                   //showRoller: true
               }
             );
@@ -144,13 +177,16 @@
 
             getPerfCountersList().then(function(data)
             {
+                self.counterNames.length=0;
                 var ctrl = $(self.graphBlockDOM).find(".perfcounter-name").first();
                 ctrl.find('option').remove();
                 ctrl.append('<option value=""></option>');
                 for(let i=0;i<data.length;i++)
                 {
                     ctrl.append('<option value="'+data[i]+'">'+data[i]+'</option>');
+                    self.counterNames.push(data[i]);
                 }
+                self.selectCounter(self.selectedName);
             });
         };
         this.resetData = function(){
@@ -165,25 +201,29 @@
             {
                 return;
             }
+            self.selectedName = name;
             getPerfCounterTrack(name, date).then(function(data)
             {
-                if(self.dataArray === undefined)
+                if(data !== undefined && data instanceof Array && data.length > 0)
                 {
-                    self.dataArray = [];
-                }
-                self.dataArray.length = 0;
-                var lastTime = new Date();
-                for(let i=self.dataArray.length;i<data.length;i++)
-                {
-                    lastTime = new Date(data[i].Timestamp);
-                    self.dataArray.push([lastTime, data[i].Value]);
-                }
+                    if(self.dataArray === undefined)
+                    {
+                        self.dataArray = [];
+                    }
+                    self.dataArray.length = 0;
+                    var lastTime = new Date();
+                    for(let i=self.dataArray.length;i<data.length;i++)
+                    {
+                        lastTime = new Date(data[i].Timestamp);
+                        self.dataArray.push([lastTime, data[i].Value]);
+                    }
 
-                graph.updateOptions({
-                    //title: name,
-                    dateWindow:[lastTime-1000*60*15, lastTime],
-                    'file': self.dataArray
-                });
+                    graph.updateOptions({
+                        //title: name,
+                        dateWindow:[lastTime-1000*60*15, lastTime],
+                        'file': self.dataArray
+                    });
+                }
             });
         }
 
@@ -196,7 +236,7 @@
             $('<form class="form-inline"></form>').appendTo(block);
             $('<div class="form-group" style="width: 100%;"></div>').appendTo($(block).find('.form-inline'));
             //$('<div>Select perf counter</div>').appendTo($(block).find('.form-group'));
-            $('<select class="form-control perfcounter-name" style="width: auto"></select>').appendTo(block.find('.form-group'));
+            $('<select class="form-control perfcounter-name  input-sm"></select>').appendTo(block.find('.form-group'));
             $('<span class="glyphicon glyphicon-trash pull-right" aria-hidden="true" data-toggle="tooltip" title="Delete chart block"></span>').appendTo(block.find('.form-group'));
             $('<div class="labelsDiv pull-right"></div>').appendTo(block);
             $('<div class="chart" style="width: 100%; height: 250px;"></div>').appendTo(block);
@@ -208,6 +248,15 @@
 
             return block;
         };
+
+        this.selectCounter = function(name)
+        {
+            if(this.counterNames.indexOf(name) >=0)
+            {
+                $(self.graphBlockDOM).find(".perfcounter-name").first().val(name).change();
+            }
+            this.selectedName = name;
+        }
     }
 
     function pollServer()

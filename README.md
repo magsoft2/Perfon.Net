@@ -5,7 +5,7 @@ Built-in REST API and UI dashboard.
 [See Demo page](http://perfon.1gb.ru/api/perfcountersui "Demo page")
 
 ### Perfon.Core
-Core library, that monitors performance metrics of ypur application.
+Core library, that monitors performance metrics of your application.
 It does not uses windows perfomance counters, so it could used with non-privileged rights. 
 It has three Storage Drivers, allowing to save counters data to CSV file, in embedded LightDB database (www.litedb.org, Analog of SQLite)
 or in in-memory cache.
