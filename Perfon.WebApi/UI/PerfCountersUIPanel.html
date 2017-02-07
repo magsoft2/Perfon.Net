@@ -1,120 +1,222 @@
-﻿<nav class="navbar navbar-light" style="background-color: #e3f2fd; width: 300px">
-    <form class="form-inline">
-        <label class="col-1">Date </label>
-        <input class="form-control" type="date" id="date1" aria-label="Selected date" onchange="refresh()">
-    </form>
+﻿<nav class="navbar navbar-default">
+<div class="">
+<form class="navbar-form">
+<div class="form-group">
+    <label for="selected_date">Date </label>
+    <input class="form-control" type="date" id="date1" name="selected_date" onchange="dateChange()">
+</div>
+    <div class="form-group">    
+                <div class="form-check">
+                    <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" id="checkPollId" onchange="checkPoll()" value="">
+                    Poll server
+                  </label>
+                </div>
+         </div>
+         <div class="form-group">  
+            <div class="btn btn-default" onclick="addChartBlock()">Add chart</div>
+         </div>
+</form>
+</div>
 </nav>
-<div class="card card-block">
-    <form class="form-inline">
-        <label class="col-2">Select perf counter</label>
-        <select class="form-control" id="perfCounterName" onchange="perCounterNameChange(this.value)" style="width: 300px">
-            <option value=""></option>
-        </select>
-    </form>
-    <div id="chart1" style="width: 600px; height: 300px;"></div>
-    <div id="logs">
+
+<div id="chartsContainer">
+    
     </div>
 
-</div>
-
-
+<style>
+    .graph-block
+    {
+        border:1px solid lightgray;
+        padding:5px;
+    }
+    select.form-control:not([size]):not([multiple])
+    {
+        padding-top: 2px;
+    }
+    @media (min-width: 1600px){
+        .col-lg-xl-3
+        {
+            width:25%;
+        }
+    }
+</style>
 <script type="text/javascript">
 
     var uri = 'perfcounters';
+    var globalChartBlockId = 0;
 
-    var dataArr = [[0,0]];
+    var graphBlocks = [];
+    var graphBlocksDOM = [];
 
-    var dyg = ResetGraph("chart1");
-
-    function ResetGraph(id)
-    {
-        dataArr = [[0,0]];
-
-        return new Dygraph(
-          document.getElementById(id),
-          dataArr,              
-          {
-              customBars: false,
-              delimiter : ';',
-              title: 'none',
-              ylabel: '',
-              legend: 'always',
-              labels: [ "Time", "Val" ],
-              showRangeSelector: true,
-              drawPoints: true
-              //showRoller: true
-          }
-        );
-    }
 
     $(document).ready(function () {
 
         $("#date1").val(new Date().toISOString().split('T')[0]);
 
-        refresh();
+        var num = 6;
+        for(let i=0;i<num;i++)
+        {
+            addChartBlock();
+        }
     });
 
-    function refresh() {
-
-        dyg = ResetGraph("chart1");
-
-        getPerfCountersList().then(function(data)
-        {
-            var ctrl = $("#perfCounterName");
-            ctrl.find('option').remove();
-            ctrl.append('<option value=""></option>');
-            for(let i=0;i<data.length;i++)
-            {
-                ctrl.append('<option value="'+data[i]+'">'+data[i]+'</option>');
-            }
-        });
+    function addChartBlock()
+    {   
+        var idx = globalChartBlockId++;
+        var gr = new GraphBlock(idx);
+        graphBlocks.push(gr);
+        graphBlocksDOM.push(gr.generateGraphBlockDOM($('#chartsContainer')));
+        gr.refresh();
     }
-    function perCounterNameChange(name){
-        if(name === undefined || name ==='')
-        {
-            return;
-        }
-        var date = $("#date1").val();
-        getPerfCounterTrack(name, date).then(function(data)
-        {
-            var text = '';
-            if(dataArr === undefined)
-            {
-                dataArr = [];
-            }
-            dataArr.length = 0;
-            var lastTime = new Date();
-            for(let i=0;i<data.length;i++)
-            {
-                lastTime = new Date(data[i].Timestamp);
-                dataArr.push([lastTime, data[i].Value]);
-                text += JSON.stringify(data[i]);
-            }
-
-            dyg.updateOptions({
-                title: name,
-                dateWindow:[lastTime-1000*60*15, lastTime],
-                'file': dataArr
-            });
-
-            $("#logs").text(text);
-        });
-    }
-
-    //setInterval(PollServer, 1000);
-
-    function PollServer()
+    function deleteChartBlock(event)
     {
-        perCounterNameChange($("#perfCounterName").val(), $("#date1").val());
-        //var x = new Date();  // current time
-        //var y = Math.random();
-        //dataArr.push([x, y]);
-        //dyg.updateOptions( { 
-        //    'file': dataArr,
-        //     dateWindow:[dyg.dateWindow_[0],x]
-        //} );
+        var blockIdx = $(event.target).closest('.graph-block').attr('id');
+        var block = graphBlocksDOM.find(function(a){return a.attr('id')== blockIdx;});
+        var idx = graphBlocksDOM.indexOf(block);
+        if(idx >= 0)
+        {
+            graphBlocks.splice(idx,1);
+            graphBlocksDOM.splice(idx,1);
+            $(event.target).closest('.graph-block').remove();
+        }
     }
+    
+    var pollTimer = undefined;
+    function checkPoll()
+    {
+        if(pollTimer === undefined)
+        {
+            pollTimer = setInterval(pollServer, 5000);
+        }else{
+            clearInterval(pollTimer);
+            pollTimer = undefined;
+        }
+    }
+
+    function refresh() {
+        graphBlocks.forEach(function(self){
+            self.refresh();
+        });
         
+    }
+    function dateChange()
+    {
+        graphBlocks.forEach(function(self){
+            self.resetData();
+            self.updatePerfCounterChartBlock();
+        });
+    }
+
+    function GraphBlock(idx)
+    {
+        var self = this;
+
+        this.dataArray = [];
+        this.graphDyg = undefined;
+        this.graphBlockDOM = undefined;
+        this.idx = idx;
+
+        this.resetGraph = function(){
+            this.dataArray = [[0,0]];
+            var lbl = $(self.graphBlockDOM).find('.labelsDiv')[0];
+            self.graphDyg = new Dygraph(
+              $(self.graphBlockDOM).find('.chart')[0],
+              self.dataArray,              
+              {
+                  customBars: false,
+                  delimiter : ';',
+                  //title: 'none',
+                  ylabel: '',
+                  legend: 'always',
+                  labels: [ "Time", "Value" ],
+                  showRangeSelector: true,
+                  drawPoints: true,
+                  labelsDiv: lbl,       
+                  fillGraph : true
+                  //showRoller: true
+              }
+            );
+        };
+
+        this.refresh = function() {
+            self.resetGraph();
+
+            getPerfCountersList().then(function(data)
+            {
+                var ctrl = $(self.graphBlockDOM).find(".perfcounter-name").first();
+                ctrl.find('option').remove();
+                ctrl.append('<option value=""></option>');
+                for(let i=0;i<data.length;i++)
+                {
+                    ctrl.append('<option value="'+data[i]+'">'+data[i]+'</option>');
+                }
+            });
+        };
+        this.resetData = function(){
+            this.dataArray.lentgh = 0;
+        }
+        this.updatePerfCounterChartBlock = function()
+        {
+            self.refreshPerfCounter($(self.graphBlockDOM).find(".perfcounter-name").first().val(), $("#date1").val(), self.graphDyg);
+        }
+        this.refreshPerfCounter = function(name, date, graph){
+            if(name === undefined || name ==='')
+            {
+                return;
+            }
+            getPerfCounterTrack(name, date).then(function(data)
+            {
+                if(self.dataArray === undefined)
+                {
+                    self.dataArray = [];
+                }
+                self.dataArray.length = 0;
+                var lastTime = new Date();
+                for(let i=self.dataArray.length;i<data.length;i++)
+                {
+                    lastTime = new Date(data[i].Timestamp);
+                    self.dataArray.push([lastTime, data[i].Value]);
+                }
+
+                graph.updateOptions({
+                    //title: name,
+                    dateWindow:[lastTime-1000*60*15, lastTime],
+                    'file': self.dataArray
+                });
+            });
+        }
+
+        this.generateGraphBlockDOM = function(container){
+
+            var block = $('<div class="col-sm-12 col-md-6 col-lg-4 col-lg-xl-3 graph-block" id="id'+idx+'"></div>').appendTo(container);
+           
+            //var block = $(container).find('.graph-block');
+           
+            $('<form class="form-inline"></form>').appendTo(block);
+            $('<div class="form-group" style="width: 100%;"></div>').appendTo($(block).find('.form-inline'));
+            //$('<div>Select perf counter</div>').appendTo($(block).find('.form-group'));
+            $('<select class="form-control perfcounter-name" style="width: auto"></select>').appendTo(block.find('.form-group'));
+            $('<span class="glyphicon glyphicon-trash pull-right" aria-hidden="true" data-toggle="tooltip" title="Delete chart block"></span>').appendTo(block.find('.form-group'));
+            $('<div class="labelsDiv pull-right"></div>').appendTo(block);
+            $('<div class="chart" style="width: 100%; height: 250px;"></div>').appendTo(block);
+
+            $(block).find('select').on('change', self.updatePerfCounterChartBlock);
+            $(block).find('.glyphicon-trash').on('click', deleteChartBlock);
+
+            this.graphBlockDOM = block;
+
+            return block;
+        };
+    }
+
+    function pollServer()
+    {
+        graphBlocks.forEach(function(self){
+            self.updatePerfCounterChartBlock();
+        });
+    }        
+
     function getPerfCountersList(){
         return $.get(uri);
 
