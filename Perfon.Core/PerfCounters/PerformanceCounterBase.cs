@@ -76,13 +76,13 @@ namespace Perfon.Core.PerfCounters
         /// Reset perf counter value to 0
         /// Thread safe
         /// </summary>
-        public virtual void Reset(long? newReversedPollingPeriod = null)
+        public virtual void Reset(long? newPollingPeriod = null)
         {
             Interlocked.Exchange(ref _value, 0);
 
-            if (newReversedPollingPeriod.HasValue)
+            if (newPollingPeriod.HasValue)
             {
-                ReversedPeriodValue = newReversedPollingPeriod.Value;
+                ReversedPeriodValue = 1.0f / newPollingPeriod.Value;
             }
         }
 
@@ -90,7 +90,7 @@ namespace Perfon.Core.PerfCounters
         /// Get current perf counter value
         /// </summary>
         /// <returns></returns>
-        public virtual double GetValue()
+        public virtual float GetValue()
         {
             if (ReversedPeriodValue != 0)
             {

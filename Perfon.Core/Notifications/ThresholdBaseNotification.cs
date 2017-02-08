@@ -9,7 +9,7 @@ namespace Perfon.Core.Notifications
 {
     public abstract class ThresholdBaseNotification : IThresholdNotification
     {
-        public ThresholdBaseNotification(double thresholdValue, string message = "")
+        public ThresholdBaseNotification(float thresholdValue, string message = "")
         {
             ThresholdValue = thresholdValue;
             Message = message;
@@ -20,7 +20,7 @@ namespace Perfon.Core.Notifications
             }
         }
 
-        public double ThresholdValue { get; private set; }
+        public float ThresholdValue { get; private set; }
 
         public bool IsThresholdViolated { get; protected set; }
 

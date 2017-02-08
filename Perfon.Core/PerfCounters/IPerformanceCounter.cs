@@ -37,7 +37,7 @@ namespace Perfon.Core.PerfCounters
         /// Thread safe
         /// </summary>
         /// <returns></returns>
-        double GetValue();
+        float GetValue();
 
         /// <summary>
         /// Return value as formatted string, using FormatString
@@ -72,7 +72,7 @@ namespace Perfon.Core.PerfCounters
         /// Reset counter value to 0
         /// Thread safe
         /// </summary>
-        void Reset(long? newReversedPollingPeriod = null);
+        void Reset(long? newPollingPeriod = null);
 
         /// <summary>
         /// Get current counter value, for pass it to Counter Storage

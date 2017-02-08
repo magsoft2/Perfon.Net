@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <projectUrl>http://perfon.1gb.ru/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>First stable release</releaseNotes>
+    <copyright>$copyright$</copyright>
+    <tags>Performance Monitoring Web Api .Net </tags>
+	<dependencies>
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+	  <dependency id="Microsoft.AspNet.Cors" version="5.2.3"/>
+	  <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3"/>
+	  <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
+	  <dependency id="Microsoft.AspNet.WebApi.Cors" version="5.2.3"/>
+      <dependency id="Perfon.Core" version="1.0.0" />
+    </dependencies>
+  </metadata>
+</package>

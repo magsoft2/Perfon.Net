@@ -98,7 +98,7 @@ namespace Perfon.Core.PerfCounterStorages
                             var values = lines.Current.ToString().Split(new string[] { ColumnDelimiter }, StringSplitOptions.RemoveEmptyEntries);
                             if (columnIdx < values.Length)
                             {
-                                var item = new PerfCounterValue(DateTime.Parse(values[0]), double.Parse(values[columnIdx]));
+                                var item = new PerfCounterValue(DateTime.Parse(values[0]), float.Parse(values[columnIdx]));
                                 if (item.Timestamp.Date == date.Value.Date)
                                 {
                                     list.Add(item);

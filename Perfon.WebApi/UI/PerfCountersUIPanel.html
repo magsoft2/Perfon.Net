@@ -206,7 +206,7 @@
             self.selectedName = name;
             getPerfCounterTrack(name, date).then(function(data)
             {
-                if(data !== undefined && data instanceof Array && data.length > 0)
+                if(data !== undefined && data instanceof Array)
                 {
                     if(self.dataArray === undefined)
                     {

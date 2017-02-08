@@ -8,7 +8,7 @@ namespace Perfon.Core.PerfCounters
 {
     public class PerfCounterData : IPerfCounterData
     {
-        public PerfCounterData(string name, double value, string formattedValue) //, DateTime timeStamp)
+        public PerfCounterData(string name, float value, string formattedValue) //, DateTime timeStamp)
         {
             Name = name;
             Value = value;
@@ -20,7 +20,7 @@ namespace Perfon.Core.PerfCounters
 
         public string FormattedValue { get; private set; }
 
-        public double Value { get; private set; }
+        public float Value { get; private set; }
 
         //public DateTime TimeStamp { get; private set; }
     }

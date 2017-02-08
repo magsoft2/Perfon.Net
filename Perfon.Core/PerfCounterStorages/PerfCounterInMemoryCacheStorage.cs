@@ -34,26 +34,26 @@ namespace Perfon.Core.PerfCounterStorages
             public DataRowPerTimeStamp(DateTime timeStamp)
             {
                 TimeStamp = timeStamp;
-                CountersValue = new Dictionary<string, double>();
+                CountersValue = new Dictionary<string, float>();
             }
 
             public DateTime TimeStamp { get; private set; }
 
-            private Dictionary<string, double> CountersValue { get; set; }
+            private Dictionary<string, float> CountersValue { get; set; }
 
             /// <summary>
             /// Returns NaN if perf counter name is not found
             /// </summary>
             /// <param name="name"></param>
             /// <returns></returns>
-            internal double TryGetCounterValue(string name)
+            internal float TryGetCounterValue(string name)
             {
-                double res = double.NaN;
+                float res = float.NaN;
                 CountersValue.TryGetValue(name, out res);
                 return res;
             }
 
-            internal void AddCounterValue(string key, double value)
+            internal void AddCounterValue(string key, float value)
             {
                 CountersValue[key] = value;
             }

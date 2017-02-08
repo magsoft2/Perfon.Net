@@ -29,8 +29,9 @@ namespace TestServer
             //PerfMonitor.RegisterInMemoryCacheStorage(60);
             PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
             PerfMonitor.OnError += (a, b) => 
-            {
-                Console.WriteLine("PerfLibForWebApi:"+b.Message);
+            {                
+                File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\errors.log", DateTime.Now.ToString()+" "+ b.Message);
+                Console.WriteLine("PerfLibForWebApi:" + b.Message);
             };
             var thr1 = new ThresholdMaxNotification(500);
             thr1.OnThresholdViolated += (a, b) => Console.WriteLine(b.Message);

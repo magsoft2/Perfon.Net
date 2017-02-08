@@ -12,7 +12,7 @@ namespace Perfon.Core.PerfCounters
     public interface IPerfCounterData
     {
         string Name { get; }
-        double Value { get; }
+        float Value { get; }
 
         string FormattedValue { get; }
         //DateTime TimeStamp { get; }

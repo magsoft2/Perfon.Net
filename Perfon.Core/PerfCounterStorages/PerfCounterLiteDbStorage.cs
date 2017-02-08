@@ -48,23 +48,33 @@ namespace Perfon.Core.PerfCounterStorages
                     // Get customer collection
                     foreach (var counter in counters)
                     {
-                        var countersColl = db.GetCollection<PerfCounterValue>(counter.Name.GetHashCode().ToString());
-                        var names = db.GetCollection("CounterNames");
-
-                        // Index document using a document property
-                        //countersColl.EnsureIndex("Timestamp", true);
-
-                        var id = names.Find(Query.EQ("Name", counter.Name)).FirstOrDefault();
-                        if (id == null)
+                        try
                         {
-                            var doc = new BsonDocument();
-                            doc.Add("Name", counter.Name);
-                            names.Insert(doc);
+                            var countersColl = db.GetCollection<PerfCounterValue>(counter.Name.GetHashCode().ToString());
+                            var names = db.GetCollection("CounterNames");
+
+                            // Index document using a document property
+                            //countersColl.EnsureIndex("Timestamp", true);
+
+                            var id = names.Find(Query.EQ("Name", counter.Name)).FirstOrDefault();
+                            if (id == null)
+                            {
+                                var doc = new BsonDocument();
+                                doc.Add("Name", counter.Name);
+                                names.Insert(doc);
+                            }
+
+                            var item = new PerfCounterValue(now, counter.Value);
+
+                            countersColl.Insert(item);
                         }
-
-                        var item = new PerfCounterValue(now, counter.Value);
-
-                        countersColl.Insert(item);
+                        catch (Exception exc)
+                        {
+                            if (OnError != null)
+                            {
+                                OnError(new object(), new ErrorEventArgs(exc.ToString()));
+                            }
+                        }
                     }
                 }
             }

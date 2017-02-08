@@ -41,7 +41,7 @@ namespace Perfon.Core.PerfCounters
         /// No reset for this counter. Use Add instead (As SetNewValue)
         /// Thread safe
         /// </summary>
-        public override void Reset(long? newReversedPollingPeriod = null)
+        public override void Reset(long? newPollingPeriod = null)
         {
             //base.Reset(newReversedPollingPeriod);
 
@@ -52,7 +52,7 @@ namespace Perfon.Core.PerfCounters
         /// Get current perf counter value
         /// </summary>
         /// <returns></returns>
-        public override double GetValue()
+        public override float GetValue()
         {
              return PostProcessMultiplyCoeff * (Value - Interlocked.Read(ref prevValue));
         }

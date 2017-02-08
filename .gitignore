@@ -1,4 +1,5 @@
 packages
+BuildNuget
 /Perfon.WebApi/bin/Debug
 /Perfon.WebApi/bin/Release
 /Perfon.WebApi/obj/Debug

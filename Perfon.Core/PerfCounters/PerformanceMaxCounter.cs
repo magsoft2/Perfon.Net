@@ -50,7 +50,7 @@ namespace Perfon.Core.PerfCounters
         /// Get current perf counter value
         /// </summary>
         /// <returns></returns>
-        public override double GetValue()
+        public override float GetValue()
         {
             if (ReversedPeriodValue != 0)
             {

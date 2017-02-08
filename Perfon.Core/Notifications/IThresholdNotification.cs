@@ -13,7 +13,7 @@ namespace Perfon.Core.Notifications
     /// </summary>
     public interface IThresholdNotification
     {
-        double ThresholdValue { get; }
+        float ThresholdValue { get; }
 
         bool IsThresholdViolated {get;}
 

@@ -44,9 +44,9 @@ namespace Perfon.Core.PerfCounters
         /// Reset perf counter value to 0
         /// Thread safe
         /// </summary>
-        public override void Reset(long? newReversedPollingPeriod = null)
+        public override void Reset(long? newPollingPeriod = null)
         {
-            base.Reset(newReversedPollingPeriod);
+            base.Reset(newPollingPeriod);
 
             Interlocked.Exchange(ref counter, 0);
         }
@@ -55,7 +55,7 @@ namespace Perfon.Core.PerfCounters
         /// Get current perf counter value
         /// </summary>
         /// <returns></returns>
-        public override double GetValue()
+        public override float GetValue()
         {
             if (counter > 0)
             {

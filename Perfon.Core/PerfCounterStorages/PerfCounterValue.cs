@@ -17,13 +17,13 @@ namespace Perfon.Core.PerfCounterStorages
 
         //}
 
-        public PerfCounterValue(DateTime timestamp, double value):this()
+        public PerfCounterValue(DateTime timestamp, float value):this()
         {
             Timestamp = timestamp;
             Value = value;
         }
 
         public DateTime Timestamp { get; set; }
-        public double Value { get; set; }
+        public float Value { get; set; }
     }
 }

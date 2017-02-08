@@ -9,7 +9,8 @@ namespace Perfon.Core.Notifications
 {
     public class ThresholdMaxNotification : ThresholdBaseNotification
     {
-        public ThresholdMaxNotification(double thresholdValue, string message = ""):base(thresholdValue, message)
+        public ThresholdMaxNotification(float thresholdValue, string message = "")
+            : base(thresholdValue, message)
         {
             if(string.IsNullOrEmpty(Message))
             {
