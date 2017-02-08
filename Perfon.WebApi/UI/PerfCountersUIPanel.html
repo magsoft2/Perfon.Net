@@ -1,5 +1,4 @@
-﻿<!--<nav class="navbar navbar-default">-->
-<div class="pane">
+﻿<div class="pane">
     <form class="navbar-form">
     <div class="form-group">
         <label for="selected_date">Date </label>
@@ -18,18 +17,15 @@
              </div>
     </form>
     <div id="chartsContainer">
-    
     </div>
 </div>
-<!--</nav>-->
-
-
 
 <style>
     .graph-block
     {
         border:1px solid #8f9aab;
         padding:5px;
+        color: #336699;
     }
     @media (min-width: 1600px){
         .col-lg-xl-3
@@ -41,10 +37,16 @@
         height: 21px;
         padding: 0px;
         background-color: #A0AEC1;
+        color: #29264E;
     }
     .date-inp
     {
         background-color: #A0AEC1;
+         color: #29264E;
+    }
+    .pane
+    {
+        color: #29264E;
     }
     body,.pane
     {
@@ -165,8 +167,8 @@
                   labelsDiv: lbl,       
                   fillGraph : true,
                   colors:["#336699"],
-                  fillAlpha : 0.3,
-                  rangeSelectorAlpha: 0.4
+                  fillAlpha : 0.5,
+                  rangeSelectorAlpha: 0.2
                   //showRoller: true
               }
             );
@@ -268,7 +270,6 @@
 
     function getPerfCountersList(){
         return $.get(uri);
-
     }
     function getPerfCounterTrack(name, date){
         return $.get(uri+'?name='+encodeURI(name)+'&date='+date);

@@ -1,16 +1,19 @@
 # Perfon.Net
-Performance monitoring .Net framework for Web Api applications with no using windows performance counters.
-Built-in REST API and UI dashboard.
+Perfon.Net is a performance monitoring .Net framework for web applications without using windows performance counters.
+
+It is designed mainly for use in WebApi and MVC projects, placed on shared hosting plans, when you have no access to IIS or OS and work without access to IIS or OS, or have non-privileged rights.
+It has built-in REST API and UI dashboard
 
 [See Demo page](http://perfon.1gb.ru/api/perfcountersui "Demo page")
+
 
 ### Perfon.Core
 Core library, that monitors performance metrics of your application.
 It does not uses windows perfomance counters, so it could used with non-privileged rights. 
-It has three Storage Drivers, allowing to save counters data to CSV file, in embedded LightDB database (www.litedb.org, Analog of SQLite)
-or in in-memory cache.
-You could implement simple storage interface and register it for storing data in your own way.
-For example, it could be used on the shared hosting plans, when you have no access to IIS or OS. 
+It has three built-in storage drivers, allowing to save counters data to CSV file, in embedded LightDB database (www.litedb.org, SQLite analog) or to keep it in memory cache.
+You could develop own storage driver implementing simple interface.
+Custom counters could be impelemented easily deriving from Peron.Net base performance counters.
+Threshold notifications could be set on counters.
 A list of implemented performance counters:
 * Number of requests per second
 * Number of exceptions per second
@@ -29,8 +32,11 @@ Todo: add sample for it.
 
 ### Perfon.WebApi 
 A wrapper for painless use Perfon with Web Api 2 projects.
-It provides Web Api for getting perf. counters through Web by /perfcounters and /perfcounters?name={perfcounterName}
-Also it provides /perfcountersUI API, which return a html page with counters visualiation dashboard.
+It provides Web Api for getting performance counters and built-in dashboard:
+get counters list: api/perfcounters 
+get values for selected counter: api/perfcounters?name={name}	
+html page dashboard iwth visualization of counters: api/perfcountersui	
+html div: api/perfcountersuipanel
 	How to use:
 1. Add a reference to Perfon.WebApi.
 2. Use it after Web Api application configuration code:
@@ -57,14 +63,14 @@ Features:
 * Register ThresholdMaxNotification on any Performance Counter to get notification event about threshold violations
 * PerfMonitor.Storage.QueryCounterValues(name) and GetCountersList() for get counter track records.
 
+
+
 ### TestServer
 Example of using Perfon.WebApi. One could run and monitor with Perfon using JMeterTests stress tests.
 
 ---
 
 ### TODO:
-* Improve Demo site
-* Improve dashboard
 * Add description of options and conventions
 * Implement PostgreSQL storage for performance counters data.
 * Perfon.WebMVC - a wrapper for painless use Perfon with Asp.Net MVC projects.
