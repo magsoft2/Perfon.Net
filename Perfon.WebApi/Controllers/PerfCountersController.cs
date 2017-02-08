@@ -39,7 +39,7 @@ namespace Perfon.WebApi
         [Route("api/perfcounters")]        
         public async Task<IHttpActionResult> Get()
         {
-            var res = MemoryCache.Default.Get(keyList);
+            var res = MemoryCache.Default.Get(keyList) as IEnumerable<string>;
 
             if (res == null)
             {
@@ -57,16 +57,21 @@ namespace Perfon.WebApi
         /// <param name="name"></param>
         /// <returns></returns>
         [Route("api/perfcounters")] ///{*name}
-        public async Task<IHttpActionResult> Get([FromUri]string name, [FromUri]DateTime? date = null)
+        public async Task<IHttpActionResult> Get([FromUri]string name, [FromUri]DateTime? date = null, [FromUri]int? skip = null)
         {
             string key = name+date.GetHashCode();
-            var res = MemoryCache.Default.Get(key);
+            var res = MemoryCache.Default.Get(key) as IEnumerable<PerfCounterValue>;
 
             if (res == null)
             {
                 // Not the best solution. Use Lazy here??
                 res = await Db.QueryCounterValues(name, date);
                 MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(2)));
+            }
+
+            if (res != null && skip.HasValue)
+            {
+                res = res.Skip(skip.Value);
             }
 
             return Ok(res);

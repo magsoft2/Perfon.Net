@@ -150,7 +150,7 @@
         this.selectedName = undefined;
 
         this.resetGraph = function(){
-            this.dataArray = [[0,0]];
+            this.dataArray = [];
             var lbl = $(self.graphBlockDOM).find('.labelsDiv')[0];
             self.graphDyg = new Dygraph(
               $(self.graphBlockDOM).find('.chart')[0],
@@ -192,37 +192,55 @@
             });
         };
         this.resetData = function(){
-            this.dataArray.lentgh = 0;
+            self.dataArray.lentgh = 0;
+            self.dataArray = [];
         }
         this.updatePerfCounterChartBlock = function()
         {
             self.refreshPerfCounter($(self.graphBlockDOM).find(".perfcounter-name").first().val(), $("#date1").val(), self.graphDyg);
         }
         this.refreshPerfCounter = function(name, date, graph){
+            console.log("update counter "+name+", "+self.dataArray.lentgh);
             if(name === undefined || name ==='')
             {
                 return;
             }
-            self.selectedName = name;
-            getPerfCounterTrack(name, date).then(function(data)
+            if(self.dataArray === undefined)
+            {
+                self.dataArray = [];
+            }  
+            if(self.selectedName != name)
+            {
+                self.dataArray.length = 0;
+                self.dataArray = [];
+                self.selectedName = name;                
+            }
+            getPerfCounterTrack(name, date, self.dataArray.length).then(function(data)
             {
                 if(data !== undefined && data instanceof Array)
                 {
-                    if(self.dataArray === undefined)
-                    {
-                        self.dataArray = [];
-                    }
-                    self.dataArray.length = 0;
                     var lastTime = new Date();
-                    for(let i=self.dataArray.length;i<data.length;i++)
+                    for(let i=0;i<data.length;i++)
                     {
                         lastTime = new Date(data[i].Timestamp);
                         self.dataArray.push([lastTime, data[i].Value]);
                     }
-
+                    var startRange=new Date(lastTime.valueOf()-1000*60*15);
+                    if(graph.dateWindow_ !== undefined && graph.dateWindow_ !== null &&graph.dateWindow_.length > 0)
+                    {
+                        if(new Date(graph.dateWindow_[0]).getDate() == lastTime.getDate())
+                        {
+                            startRange = graph.dateWindow_[0];
+                        }
+                    }
                     graph.updateOptions({
                         //title: name,
-                        dateWindow:[lastTime-1000*60*15, lastTime],
+                        'file': self.dataArray,
+                        dateWindow:[startRange, lastTime]
+                    });                    
+                }else{
+                    self.dataArray = [];
+                    graph.updateOptions({
                         'file': self.dataArray
                     });
                 }
@@ -271,8 +289,8 @@
     function getPerfCountersList(){
         return $.get(uri);
     }
-    function getPerfCounterTrack(name, date){
-        return $.get(uri+'?name='+encodeURI(name)+'&date='+date);
+    function getPerfCounterTrack(name, date, skip){
+        return $.get(uri+'?name='+encodeURI(name)+'&date='+date+'&skip='+skip);
     }
 
 </script>
