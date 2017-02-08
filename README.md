@@ -4,7 +4,8 @@ Perfon.Net is a performance monitoring .Net framework for web applications witho
 It is designed mainly for use in WebApi and MVC projects, placed on shared hosting plans, when you have no access to IIS or OS and work without access to IIS or OS, or have non-privileged rights.
 It has built-in REST API and UI dashboard
 
-[See Demo page](http://perfon.1gb.ru/api/perfcountersui "Demo page")
+[See Demo site](http://perfon.1gb.ru "Demo site")
+[See Demo page only, returned from Perfon.Net Api](http://perfon.1gb.ru/api/perfcountersui "See Demo page only, returned from Perfon.Net Api")
 
 
 ### Perfon.Core
