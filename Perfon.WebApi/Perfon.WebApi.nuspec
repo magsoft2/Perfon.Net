@@ -9,7 +9,7 @@
     <projectUrl>http://perfon.1gb.ru/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>First stable release</releaseNotes>
+    <releaseNotes>Dashboard bug fix</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Performance Monitoring Web Api .Net </tags>
 	<dependencies>

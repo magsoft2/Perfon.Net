@@ -72,7 +72,7 @@ namespace Perfon.Core.PerfCounterStorages
             }
         }
 
-        public Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null)
+        public Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip=0)
         {
             var list = new List<PerfCounterValue>();
 

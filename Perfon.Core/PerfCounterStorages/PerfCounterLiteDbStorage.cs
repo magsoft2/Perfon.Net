@@ -45,36 +45,37 @@ namespace Perfon.Core.PerfCounterStorages
 
                 using (var db = new LiteDatabase(PathToDbFolder + dbName))
                 {
-                    // Get customer collection
-                    foreach (var counter in counters)
+                    using (var trans = db.BeginTrans())
                     {
-                        try
+                        // Get customer collection
+                        foreach (var counter in counters)
                         {
-                            var countersColl = db.GetCollection<PerfCounterValue>(counter.Name.GetHashCode().ToString());
-                            var names = db.GetCollection("CounterNames");
-
-                            // Index document using a document property
-                            //countersColl.EnsureIndex("Timestamp", true);
-
-                            var id = names.Find(Query.EQ("Name", counter.Name)).FirstOrDefault();
-                            if (id == null)
+                            try
                             {
-                                var doc = new BsonDocument();
-                                doc.Add("Name", counter.Name);
-                                names.Insert(doc);
+                                var countersColl = db.GetCollection<PerfCounterValue>(counter.Name.GetHashCode().ToString());
+                                var names = db.GetCollection("CounterNames");
+
+                                var id = names.Find(Query.EQ("Name", counter.Name)).FirstOrDefault();
+                                if (id == null)
+                                {
+                                    var doc = new BsonDocument();
+                                    doc.Add("Name", counter.Name);
+                                    names.Insert(doc);
+                                }
+
+                                var item = new PerfCounterValue(now, counter.Value);
+
+                                countersColl.Insert(item);
                             }
-
-                            var item = new PerfCounterValue(now, counter.Value);
-
-                            countersColl.Insert(item);
-                        }
-                        catch (Exception exc)
-                        {
-                            if (OnError != null)
+                            catch (Exception exc)
                             {
-                                OnError(new object(), new ErrorEventArgs(exc.ToString()));
+                                if (OnError != null)
+                                {
+                                    OnError(new object(), new ErrorEventArgs(exc.ToString()));
+                                }
                             }
                         }
+                        trans.Commit();
                     }
                 }
             }
@@ -89,7 +90,7 @@ namespace Perfon.Core.PerfCounterStorages
             return Task.Delay(0);
         }
 
-        public Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null)
+        public Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip=0)
         {
             var list = new List<PerfCounterValue>();
 
@@ -102,14 +103,15 @@ namespace Perfon.Core.PerfCounterStorages
 
             try
             {
-                var dbName = GetDbName(date.Value);
-
-                using (var db = new LiteDatabase(PathToDbFolder+dbName))
+                using (var db = new LiteDatabase(GetDbReadOnlyName(date.Value)))
                 {
-                    var countersColl = db.GetCollection<PerfCounterValue>(counterName.GetHashCode().ToString());
+                    list = db.Engine.Find(counterName.GetHashCode().ToString(), Query.GTE("Timestamp", new BsonValue(date)), skip).Select(a =>
+                        {
+                            return new PerfCounterValue(a["Timestamp"].AsDateTime, (float)a["Value"].AsDouble);
+                        }).ToList();
 
-                    list = countersColl.FindAll().Where(a => a.Timestamp.Date == date).ToList();
-
+                    //var countersColl = db.GetCollection<PerfCounterValue>(counterName.GetHashCode().ToString());
+                    //list = countersColl.FindAll().Where(a => a.Timestamp.Date == date).ToList();
                 }
             }
             catch (Exception exc)
@@ -135,14 +137,10 @@ namespace Perfon.Core.PerfCounterStorages
 
                 using (var db = new LiteDatabase(PathToDbFolder + dbName))
                 {
-                    // Get customer collection
-                    var names = db.GetCollection("CounterNames");
+                    //var names = db.GetCollection("CounterNames");
+                    //res = names.FindAll().Select(a => a["Name"].AsString).ToList();
 
-                    // Index document using a document property
-                    //countersColl.EnsureIndex("Timestamp", true);
-
-                    res = names.FindAll().Select(a => a["Name"].AsString).ToList();
-
+                    res = db.Engine.FindAll("CounterNames").Select(a => a["Name"].AsString).ToList();
                 }
             }
             catch (Exception exc)
@@ -164,7 +162,12 @@ namespace Perfon.Core.PerfCounterStorages
         {
             return "perfCounters_" + now.ToString("yyyy-MM-dd") + ".litedb";
         }
+        private string GetDbReadOnlyName(DateTime date)
+        {
+            return "Filename=" + PathToDbFolder + GetDbName(date) + ";Mode=ReadOnly;Timeout=" + TimeSpan.FromSeconds(30);
+        }
 
+        
         
     }
 }

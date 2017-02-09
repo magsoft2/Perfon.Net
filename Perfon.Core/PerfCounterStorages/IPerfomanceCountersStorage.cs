@@ -25,7 +25,7 @@ namespace Perfon.Core.PerfCounterStorages
         /// <param name="counterName"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null);
+        Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip = 0);
 
         /// <summary>
         /// Get list of names of all perf counters in the storage

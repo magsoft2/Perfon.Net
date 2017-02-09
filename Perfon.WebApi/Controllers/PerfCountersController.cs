@@ -20,7 +20,7 @@ namespace Perfon.WebApi
     public class PerfCountersController : ApiController
     {
         readonly string keyList = "PerfListCounters";
-            
+
 
         public IPerfomanceCountersStorage Db
         {
@@ -36,16 +36,16 @@ namespace Perfon.WebApi
         /// Get counters list
         /// </summary>
         /// <returns></returns>
-        [Route("api/perfcounters")]        
+        [Route("api/perfcounters")]
         public async Task<IHttpActionResult> Get()
         {
             var res = MemoryCache.Default.Get(keyList) as IEnumerable<string>;
 
-            if (res == null)
+            if (res == null || res.Count() <= 0)
             {
                 // Not the best solution. Use Lazy here??
                 res = await Db.GetCountersList();
-                MemoryCache.Default.Add(keyList, res, new DateTimeOffset(DateTime.Now.AddSeconds(10)));
+                MemoryCache.Default.Add(keyList, res, new DateTimeOffset(DateTime.Now.AddSeconds(60)));
             }
 
             return Ok(res);
@@ -59,19 +59,25 @@ namespace Perfon.WebApi
         [Route("api/perfcounters")] ///{*name}
         public async Task<IHttpActionResult> Get([FromUri]string name, [FromUri]DateTime? date = null, [FromUri]int? skip = null)
         {
-            string key = name+date.GetHashCode();
+            int skip2 = 0;
+            if (skip.HasValue)
+            {
+                skip2 = skip.Value;
+            }
+
+            string key = name + date.GetHashCode();
             var res = MemoryCache.Default.Get(key) as IEnumerable<PerfCounterValue>;
 
             if (res == null)
             {
                 // Not the best solution. Use Lazy here??
                 res = await Db.QueryCounterValues(name, date);
-                MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(2)));
+                MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(3)));
             }
 
-            if (res != null && skip.HasValue)
+            if (res != null && skip2 > 0)
             {
-                res = res.Skip(skip.Value);
+                res = res.Skip(skip2).ToList();
             }
 
             return Ok(res);
