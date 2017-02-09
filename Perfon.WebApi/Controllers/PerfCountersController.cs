@@ -68,7 +68,7 @@ namespace Perfon.WebApi
             string key = name + date.GetHashCode();
             var res = MemoryCache.Default.Get(key) as IEnumerable<PerfCounterValue>;
 
-            if (res == null)
+            if (res == null || res.Count() <= 0)
             {
                 // Not the best solution. Use Lazy here??
                 res = await Db.QueryCounterValues(name, date);

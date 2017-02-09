@@ -43,7 +43,7 @@ namespace Perfon.Core.PerfCounterStorages
 
                 var dbName = GetDbName(now);
 
-                using (var db = new LiteDatabase(PathToDbFolder + dbName))
+                using (var db = new LiteDatabase(dbName))
                 {
                     using (var trans = db.BeginTrans())
                     {
@@ -105,13 +105,13 @@ namespace Perfon.Core.PerfCounterStorages
             {
                 using (var db = new LiteDatabase(GetDbReadOnlyName(date.Value)))
                 {
-                    list = db.Engine.Find(counterName.GetHashCode().ToString(), Query.GTE("Timestamp", new BsonValue(date)), skip).Select(a =>
-                        {
-                            return new PerfCounterValue(a["Timestamp"].AsDateTime, (float)a["Value"].AsDouble);
-                        }).ToList();
+                    //list = db.Engine.Find(counterName.GetHashCode().ToString(), Query.GTE("Timestamp", new BsonValue(date)), skip).Select(a =>
+                    //    {
+                    //        return new PerfCounterValue(a["Timestamp"].AsDateTime, (float)a["Value"].AsDouble);
+                     //   }).ToList();
 
-                    //var countersColl = db.GetCollection<PerfCounterValue>(counterName.GetHashCode().ToString());
-                    //list = countersColl.FindAll().Where(a => a.Timestamp.Date == date).ToList();
+                    var countersColl = db.GetCollection<PerfCounterValue>(counterName.GetHashCode().ToString());
+                    list = countersColl.FindAll().Where(a => a.Timestamp.Date == date).ToList();
                 }
             }
             catch (Exception exc)
@@ -133,14 +133,12 @@ namespace Perfon.Core.PerfCounterStorages
             {
                 var now = DateTime.Now;
                 
-                var dbName = GetDbName(now);
-
-                using (var db = new LiteDatabase(PathToDbFolder + dbName))
+                using (var db = new LiteDatabase(GetDbReadOnlyName(now)))
                 {
-                    //var names = db.GetCollection("CounterNames");
-                    //res = names.FindAll().Select(a => a["Name"].AsString).ToList();
+                    var names = db.GetCollection("CounterNames");
+                    res = names.FindAll().Select(a => a["Name"].AsString).ToList();
 
-                    res = db.Engine.FindAll("CounterNames").Select(a => a["Name"].AsString).ToList();
+                    //res = db.Engine.FindAll("CounterNames").Select(a => a["Name"].AsString).ToList();
                 }
             }
             catch (Exception exc)
@@ -158,13 +156,21 @@ namespace Perfon.Core.PerfCounterStorages
 
 
 
-        private static string GetDbName(DateTime now)
+        private string GetDbName(DateTime now)
         {
-            return "perfCounters_" + now.ToString("yyyy-MM-dd") + ".litedb";
+            return PathToDbFolder + "perfCounters_" + now.ToString("yyyy-MM-dd") + ".litedb";
         }
         private string GetDbReadOnlyName(DateTime date)
         {
-            return "Filename=" + PathToDbFolder + GetDbName(date) + ";Mode=ReadOnly;Timeout=" + TimeSpan.FromSeconds(30);
+            //return  GetDbName(date);
+
+            string journal = "";
+            if (date.Date != DateTime.Now.Date)
+            {
+                journal = ";Journal=false";
+            }
+            //;Mode=ReadOnly
+            return "Filename=" + GetDbName(date) + journal + ";Mode=ReadOnly";//;Timeout=" + TimeSpan.FromSeconds(30);
         }
 
         
