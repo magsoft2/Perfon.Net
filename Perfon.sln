@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfon.WebApi", "Perfon.Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfon.Core", "Perfon.Core\Perfon.Core.csproj", "{15EA05E4-0BCF-4A35-B177-59B932869414}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMvcApp", "TestMvcApp\TestMvcApp.csproj", "{1E10E563-1B8F-441E-A230-538EA910718B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfon.Mvc", "Perfon.Mvc\Perfon.Mvc.csproj", "{C72EEB48-14A1-49B0-A61D-EB3565978E31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,14 @@ Global
 		{15EA05E4-0BCF-4A35-B177-59B932869414}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15EA05E4-0BCF-4A35-B177-59B932869414}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15EA05E4-0BCF-4A35-B177-59B932869414}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E10E563-1B8F-441E-A230-538EA910718B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E10E563-1B8F-441E-A230-538EA910718B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E10E563-1B8F-441E-A230-538EA910718B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E10E563-1B8F-441E-A230-538EA910718B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C72EEB48-14A1-49B0-A61D-EB3565978E31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C72EEB48-14A1-49B0-A61D-EB3565978E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C72EEB48-14A1-49B0-A61D-EB3565978E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C72EEB48-14A1-49B0-A61D-EB3565978E31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

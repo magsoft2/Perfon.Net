@@ -5,18 +5,21 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Routing;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using Perfon.Core;
 using Perfon.Core.PerfCounterStorages;
+using Perfon.Mvc.Filters;
 
-namespace Perfon.WebApi
+namespace Perfon.Mvc
 {
     /// <summary>
-    /// Wrapper on PerfMonitor for Web Api.
-    /// It registers filters and handlers thus tracking request counters.
+    /// Wrapper on PerfMonitor for Asp.Net MVC 5
+    /// It registers filters allowing to track request counters.
+    /// It sets own route as the first route
     /// </summary>
-    public class PerfMonitorForWebApi
+    public class PerfMonitorForMvc
     {
         public PerfMonitor PerfMonitorBase { get; private set; }
 
@@ -37,7 +40,7 @@ namespace Perfon.WebApi
         public event EventHandler<Perfon.Core.ErrorEventArgs> OnError;
 
 
-        public PerfMonitorForWebApi()
+        public PerfMonitorForMvc()
         {
             PerfMonitorBase = new PerfMonitor();
 
@@ -79,18 +82,30 @@ namespace Perfon.WebApi
         /// Start polling and saving perf counters. Period is in ms
         /// </summary>
         /// <param name="pollPeriod_ms">Poll period, ms</param>
-        public void Start(HttpConfiguration httpConfiguration, int pollPeriod_ms)
+        public void Start(HttpApplication app, RouteCollection routes, int pollPeriod_ms)
         {
             PerfMonitorBase.Start(pollPeriod_ms);
 
-            httpConfiguration.Filters.Add(new ExceptionCounterFilter(this.PerfMonitorBase));
+            app.Application[EnumKeyNames.PerfMonitorLib.ToString()] = this;
 
-            httpConfiguration.MessageHandlers.Add(new RequestPerfMonitorMessageHandler(this.PerfMonitorBase));
+            if (Configuration.EnablePerfApi)
+            {
+                var r = routes.MapRoute(
+                    name: "PerfMonitor",
+                    url: "api/perfcounters/",
+                    defaults: new { controller = "PerfCounters", action = "Get" }
+                );
+                routes.Remove(r);
+                routes.Insert(0, r);
+            }
 
-            //httpConfiguration.Services.Add(typeof(PerfMonitorForWebApi), this);
+            GlobalFilters.Filters.Add(new PerfMonitoringFilter(PerfMonitorBase));
+            GlobalFilters.Filters.Add(new ExceptionCounterFilter(PerfMonitorBase));
 
-            httpConfiguration.Properties[EnumKeyNames.PerfMonitorLib.ToString()] = this;
         }
+
+        
+
         /// <summary>
         /// Stops perf counters polling
         /// </summary>

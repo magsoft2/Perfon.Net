@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Filters;
+using Perfon.Core;
 
 namespace Perfon.WebApi
 {
@@ -14,7 +15,7 @@ namespace Perfon.WebApi
     {
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
-            var perfLib = actionContext.ControllerContext.Configuration.Properties["PerfMonitorLib"] as PerfMonitorForWebApi;
+            var perfLib = actionContext.ControllerContext.Configuration.Properties[EnumKeyNames.PerfMonitorLib.ToString()] as PerfMonitorForWebApi;
 
             if (perfLib == null)
             {
@@ -34,7 +35,7 @@ namespace Perfon.WebApi
 
         public override Task OnActionExecutingAsync(System.Web.Http.Controllers.HttpActionContext actionContext, System.Threading.CancellationToken cancellationToken)
         {
-            var perfLib = actionContext.ControllerContext.Configuration.Properties["PerfMonitorLib"] as PerfMonitorForWebApi;
+            var perfLib = actionContext.ControllerContext.Configuration.Properties[EnumKeyNames.PerfMonitorLib.ToString()] as PerfMonitorForWebApi;
 
             if (perfLib == null)
             {

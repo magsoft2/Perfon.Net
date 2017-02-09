@@ -15,7 +15,7 @@ namespace Perfon.WebApi
     /// </summary>
     public class RequestPerfMonitorMessageHandler : DelegatingHandler
     {
-         /// <summary>
+        /// <summary>
         /// Core PerfMon object managing perfCounters
         /// </summary>
         private PerfMonitor PerfMonitor {get;set;}

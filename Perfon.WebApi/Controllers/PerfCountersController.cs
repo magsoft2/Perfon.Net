@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using Perfon.Core;
 using Perfon.Core.PerfCounterStorages;
 using Perfon.WebApi;
 
@@ -27,7 +28,7 @@ namespace Perfon.WebApi
             get
             {
                 //How to deal with DI here??
-                return (this.ControllerContext.Configuration.Properties["PerfMonitorLib"] as PerfMonitorForWebApi).Storage;
+                return (this.ControllerContext.Configuration.Properties[EnumKeyNames.PerfMonitorLib.ToString()] as PerfMonitorForWebApi).Storage;
             }
         }
 
@@ -56,7 +57,7 @@ namespace Perfon.WebApi
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        [Route("api/perfcounters")] ///{*name}
+        [Route("api/perfcounters")]
         public async Task<IHttpActionResult> Get([FromUri]string name, [FromUri]DateTime? date = null, [FromUri]int? skip = null)
         {
             int skip2 = 0;

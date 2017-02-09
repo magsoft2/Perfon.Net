@@ -9,7 +9,7 @@
     <projectUrl>http://perfon.1gb.ru/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Dashboard bug fix</releaseNotes>
+    <releaseNotes>MVC 5  support has been added</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Performance Monitoring .Net </tags>
   </metadata>

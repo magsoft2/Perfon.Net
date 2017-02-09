@@ -11,13 +11,9 @@
     <description>$description$</description>
     <releaseNotes>MVC 5  support has been added</releaseNotes>
     <copyright>$copyright$</copyright>
-    <tags>Performance Monitoring Web Api .Net </tags>
+    <tags>Performance Monitoring Web Asp.Net MVC 5 .Net </tags>
 	<dependencies>
       <dependency id="Newtonsoft.Json" version="9.0.1" />
-	  <dependency id="Microsoft.AspNet.Cors" version="5.2.3"/>
-	  <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3"/>
-	  <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
-	  <dependency id="Microsoft.AspNet.WebApi.Cors" version="5.2.3"/>
       <dependency id="Perfon.Core" version="1.0.3" />
     </dependencies>
   </metadata>

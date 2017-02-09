@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using Perfon.Core;
 using Perfon.Core.PerfCounterStorages;
 using Perfon.WebApi;
 
@@ -29,7 +30,7 @@ namespace Perfon.WebApi
             get
             {
                 //How to deal with DI here??
-                return (this.ControllerContext.Configuration.Properties["PerfMonitorLib"] as PerfMonitorForWebApi);
+                return (this.ControllerContext.Configuration.Properties[EnumKeyNames.PerfMonitorLib.ToString()] as PerfMonitorForWebApi);
             }
         }
 
@@ -46,7 +47,7 @@ namespace Perfon.WebApi
         public async Task<HttpResponseMessage> Get()
         {
             var response = new HttpResponseMessage();
-            response.Content = new StringContent(PerfMonitorLib.UIPage.Value);
+            response.Content = new StringContent(PerfMonitorLib.UIPage);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
             
             return response;

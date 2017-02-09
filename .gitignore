@@ -11,3 +11,9 @@ BuildNuget
 /TestServer/bin
 /TestServer/obj/Debug
 /TestServer/obj/Release
+/Perfon.Mvc/bin
+/Perfon.Mvc/obj/Debug
+/Perfon.Mvc/obj/Release
+/TestMvcApp/obj/Release
+/TestMvcApp/bin
+/TestMvcApp/obj/Debug

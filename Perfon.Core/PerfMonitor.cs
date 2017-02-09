@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -249,6 +250,72 @@ namespace Perfon.Core
                 timer = null;
             }
         }
+
+
+        /// <summary>
+        /// Return UI html page for monitor perf counters
+        /// </summary>
+        public Lazy<string> UIPage = new Lazy<string>(() =>
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Perfon.Core.UI.PerfCountersUI.html";
+
+            string result = "";
+
+            try
+            {
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+
+                        using (Stream stream2 = assembly.GetManifestResourceStream("Perfon.Core.UI.PerfCountersUIPanel.html"))
+                        {
+                            using (StreamReader reader2 = new StreamReader(stream2))
+                            {
+                                result = result.Replace("PLACEHOLDER_FOR_PANEL", reader2.ReadToEnd());
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                result = exc.ToString();
+            }
+
+            return result;
+        });
+        /// <summary>
+        /// Return UI html panel as div for monitor perf counters
+        /// </summary>
+        private Lazy<string> uiPanel = new Lazy<string>(() =>
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Perfon.Core.UI.PerfCountersUIPanel.html";
+
+            string result = "";
+
+            try
+            {
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        result = reader.ReadToEnd();
+                    }
+                }
+            }
+            catch (Exception exc)
+            {
+                result = exc.ToString();
+            }
+
+            return result;
+        });
+        public string UIPanel { get { return uiPanel.Value; } }
 
 
 
