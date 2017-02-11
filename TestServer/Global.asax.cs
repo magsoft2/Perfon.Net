@@ -42,7 +42,7 @@ namespace TestServer
             PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan = 0; //Do not store perf values if RequestsNum = 0 during poll period
             PerfMonitor.Configuration.EnablePerfApi = true; // Enable getting perf values by API GET addresses 'api/perfcounters' and  'api/perfcounters/{name}'
             PerfMonitor.Configuration.EnablePerfUIApi = true; // Enable getting UI html page with perf counters values by API GET 'api/perfcountersui' or 'api/perfcountersuipanel'
-            PerfMonitor.Start(GlobalConfiguration.Configuration, 2000);
+            PerfMonitor.Start(GlobalConfiguration.Configuration, 5000);
             
         }
 

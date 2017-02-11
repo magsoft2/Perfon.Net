@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Perfon.WebApi")]
-[assembly: AssemblyDescription("Perfon.WebApi is a performance monitoring .Net framework for Web Api .Net applications without using windows performance counters")]
+[assembly: AssemblyDescription("Perfon.WebApi is an open source performance monitoring .Net framework for Web Api 2 applications without using windows performance counters. It has built-in UI dashboard and Rest API. Collected data is stored in-memory cache, and/or in LiteDB embedded database, and/or in any custom storage driver.  See simple how-to example on https://github.com/magsoft2/Perfon.Net")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("magsoft2")]
 [assembly: AssemblyProduct("Perfon.WebApi")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.2.0")]
-[assembly: AssemblyFileVersion("1.0.2.0")]
+[assembly: AssemblyVersion("1.0.3.0")]
+[assembly: AssemblyFileVersion("1.0.3.0")]

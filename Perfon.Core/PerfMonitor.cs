@@ -230,6 +230,13 @@ namespace Perfon.Core
                 (item as IPerformanceCounter).ReversedPeriodValue = PollPeriod_RevSec;
             }
 
+            // Add all counter names to db
+            var listTemp = countersListGeneric.Select(a => a.GetPerfCounterData()).ToList();
+            foreach (var item in storagesList)
+            {
+                item.StorePerfCounters(listTemp);
+            }
+
             //Restart timer if needed
             if (timer != null)
             {
@@ -403,7 +410,7 @@ namespace Perfon.Core
             gcGen2.Add(GC.CollectionCount(2));
             if (AppDomain.MonitoringIsEnabled)
             {
-                cpuUsage.Add((long)AppDomain.CurrentDomain.MonitoringTotalProcessorTime.TotalMilliseconds);
+                cpuUsage.Add((long)AppDomain.CurrentDomain.MonitoringTotalProcessorTime.TotalMilliseconds/Environment.ProcessorCount);
                 //cpuUsage.Add((long)AppDomain.CurrentDomain.MonitoringTotalAllocatedMemorySize);
             }
         }

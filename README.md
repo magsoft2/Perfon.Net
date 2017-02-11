@@ -8,9 +8,9 @@ It has built-in REST API and UI dashboard.
 
 [See Demo page only, returned from Perfon.Net Api](http://perfon.1gb.ru/api/perfcountersui "See Demo page only, returned from Perfon.Net Api")
 
-Install from NuGet: `Install-Package Perfon.WebApi` [link](https://www.nuget.org/packages/Perfon.WebApi "Nuget link") for using in Asp.Net WebApi projects.
+Install from NuGet: `Install-Package Perfon.WebApi` [(link)](https://www.nuget.org/packages/Perfon.WebApi "Nuget link") for using in Asp.Net WebApi projects.
 
-Install from NuGet: `Install-Package Perfon.Mvc` [link](https://www.nuget.org/packages/Perfon.Mvc "Nuget link") for using in Asp.Net Mvc 5 projects.
+Install from NuGet: `Install-Package Perfon.Mvc` [(link)](https://www.nuget.org/packages/Perfon.Mvc "Nuget link") for using in Asp.Net Mvc 5 projects.
 
 
 It is designed mainly for use in WebApi and MVC projects, placed on shared hosting plans, when you have no access to IIS or OS and work without access to IIS or OS, or have non-privileged rights.
@@ -50,7 +50,7 @@ Counter values have need verified with counters of JMeter and Windows PerfMon fo
 (TODO: add comparison images)
 
 
----
+--
 
 ### Perfon.WebApi 
 A wrapper for painless use Perfon with Web Api 2 projects.
@@ -73,9 +73,11 @@ A wrapper for painless use Perfon with Web Api 2 projects.
     PerfMonitor.Configuration.EnablePerfApi = true; // Enable getting perf values by API GET addresses 'api/perfcounters' and  'api/perfcounters?name={name}'
     PerfMonitor.Configuration.EnablePerfUIApi = true; // Enable getting UI html page with perf counters values by API GET 'api/perfcountersui' or 'api/perfcountersuipanel'
             
-	//Start the poll with period 2000
+	//Start the poll with period 2000ms = 2sec
     PerfMonitor.Start(GlobalConfiguration.Configuration, 2000);
 ```
+
+Note, that you need to enable attribute routing via config.MapHttpAttributeRoutes() in your Web Api application;
 
 Features:
 * Use PerfMonitor.UIPage and PerfMonitor.UIPanel for getting UI html as string for return it in your own controllers
@@ -102,7 +104,7 @@ A wrapper for painless use Perfon with Web Mvc 5 projects.
     PerfMonitor.Start(this, RouteTable.Routes, 2000);
 ```
 
----
+--
 			
 ### Perfon.Core
 Core library, that monitors performance metrics of your application.
@@ -114,17 +116,17 @@ It does not uses windows perfomance counters, so it could used with non-privileg
 ### TestServer
 Example of using Perfon.WebApi. One could run and monitor with Perfon using JMeterTests stress tests.
 
----
+--
 
 
 ### TestMvcApp
 Example of using Perfon.Mvc.
 
----
+--
 
 License: MIT
 
----
+--
 
 ### TODO:
 * add sample for custom counter.

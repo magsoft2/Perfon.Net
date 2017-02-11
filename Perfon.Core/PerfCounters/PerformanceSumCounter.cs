@@ -27,11 +27,11 @@ namespace Perfon.Core.PerfCounters
         {
             if (ReversedPeriodValue != 0)
             {
-                return PostProcessMultiplyCoeff * Value * ReversedPeriodValue;
+                return PostProcessMultiplyCoeff * (float)Value * ReversedPeriodValue;
             }
             else
             {
-                return PostProcessMultiplyCoeff * Value;
+                return PostProcessMultiplyCoeff * (float)Value;
             }
         }
         

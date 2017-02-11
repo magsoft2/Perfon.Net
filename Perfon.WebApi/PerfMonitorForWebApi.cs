@@ -90,6 +90,8 @@ namespace Perfon.WebApi
             //httpConfiguration.Services.Add(typeof(PerfMonitorForWebApi), this);
 
             httpConfiguration.Properties[EnumKeyNames.PerfMonitorLib.ToString()] = this;
+
+            //httpConfiguration.MapHttpAttributeRoutes();
         }
         /// <summary>
         /// Stops perf counters polling

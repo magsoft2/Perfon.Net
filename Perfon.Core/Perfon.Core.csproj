@@ -51,9 +51,11 @@
     <Compile Include="Notifications\IThresholdNotification.cs" />
     <Compile Include="Notifications\ThresholdBaseNotification.cs" />
     <Compile Include="Notifications\ThreshouldNotificationEventArg.cs" />
+    <Compile Include="PerfCounterStorages\PerfCountersDoc.cs" />
+    <Compile Include="PerfCounterStorages\PerfCounterValue2.cs" />
     <Compile Include="PerfCounterStorages\PerfCounterInMemoryCacheStorage.cs" />
     <Compile Include="PerfCounterStorages\PerfCounterLiteDbStorage.cs" />
-    <Compile Include="PerfCounterStorages\PerfonConfiguration.cs" />
+    <Compile Include="PerfonConfiguration.cs" />
     <Compile Include="PerfCounters\IPerfCounterData.cs" />
     <Compile Include="PerfCounters\PerfCounterData.cs" />
     <Compile Include="PerfCounters\PerformanceSumAbsoluteCounter.cs" />

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Perfon.Core")]
-[assembly: AssemblyDescription("Perfon.Core is a core for Perfon.WebApi and Perfon.MVC packages. Perfon.Net Core is a performance monitoring .Net framework for web applications without using windows performance counters")]
+[assembly: AssemblyDescription("Perfon.Core is a core for Perfon.WebApi and Perfon.MVC packages. Perfon.Net is an open source performance monitoring .Net framework for web applications without using windows performance counters. See simple how-to example on https://github.com/magsoft2/Perfon.Net")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("magsoft2")]
 [assembly: AssemblyProduct("Perfon.Core")]

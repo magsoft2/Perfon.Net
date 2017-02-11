@@ -45,6 +45,8 @@ namespace Perfon.Core.PerfCounterStorages
 
                 using (var db = new LiteDatabase(dbName))
                 {
+                    var names = db.GetCollection("CounterNames");
+
                     using (var trans = db.BeginTrans())
                     {
                         // Get customer collection
@@ -52,20 +54,37 @@ namespace Perfon.Core.PerfCounterStorages
                         {
                             try
                             {
-                                var countersColl = db.GetCollection<PerfCounterValue>(counter.Name.GetHashCode().ToString());
-                                var names = db.GetCollection("CounterNames");
-
-                                var id = names.Find(Query.EQ("Name", counter.Name)).FirstOrDefault();
-                                if (id == null)
+                                var col = names.Find(Query.EQ("Name", counter.Name)).FirstOrDefault();
+                                if (col == null)
                                 {
                                     var doc = new BsonDocument();
                                     doc.Add("Name", counter.Name);
                                     names.Insert(doc);
                                 }
 
-                                var item = new PerfCounterValue(now, counter.Value);
+                                
+                                //var countersColl = db.GetCollection<PerfCounterValue2>(counter.Name.GetHashCode().ToString());
+                                //countersColl.Insert(item);
 
-                                countersColl.Insert(item);
+                                int id = counter.Name.GetHashCode();
+                                var countersColl = db.GetCollection<PerfCountersDoc>(id.ToString());
+                                var docCounter = countersColl.Find(a => a._id == id).FirstOrDefault();
+                                if (docCounter == null)
+                                {
+                                    docCounter = new PerfCountersDoc();
+                                    docCounter.CounterName = counter.Name;
+                                    docCounter._id = id;
+                                }
+
+                                docCounter.Values.Add(new PerfCounterValue3(now, counter.Value));
+
+                                countersColl.Upsert(docCounter);
+
+                                //var item = new PerfCounterValue2(now, counter.Value);
+                                //var bs = new BsonDocument();
+                                //bs["_id"] = item._id;
+                                //bs["V"] = new BsonValue(item.V);
+                                //countersColl.Insert(bs);
                             }
                             catch (Exception exc)
                             {
@@ -110,8 +129,23 @@ namespace Perfon.Core.PerfCounterStorages
                     //        return new PerfCounterValue(a["Timestamp"].AsDateTime, (float)a["Value"].AsDouble);
                      //   }).ToList();
 
-                    var countersColl = db.GetCollection<PerfCounterValue>(counterName.GetHashCode().ToString());
-                    list = countersColl.FindAll().Where(a => a.Timestamp.Date == date).ToList();
+
+                    /*
+                    var countersColl = db.GetCollection(counterName.GetHashCode().ToString()); //<PerfCounterValue2>
+                    list = countersColl.FindAll().Select(a =>
+                        {
+                            var a2 = new PerfCounterValue2(a);
+                            return new PerfCounterValue(a2.GetFullTimeStamp(date.Value), a2.GetValue());
+                        }).ToList(); //.Where(a => a.Timestamp.Date == date).ToList();
+                     * */
+
+                    int id = counterName.GetHashCode();                                
+                    var countersColl = db.GetCollection<PerfCountersDoc>(id.ToString());
+                    var res = countersColl.Find(a => a._id == id).FirstOrDefault();
+                    if (res != null)
+                    {
+                        list = res.Values.Skip(skip).Select(a => a.GetValue(date.Value)).ToList();
+                    }
                 }
             }
             catch (Exception exc)

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Perfon.Mvc")]
-[assembly: AssemblyDescription("Perfon.Mvc is a performance monitoring .Net framework for Asp.Net MVC 5 .Net applications without using windows performance counters")]
+[assembly: AssemblyDescription("Perfon.Mvc is an open source performance monitoring .Net framework for Asp.Net MVC 5 applications without using windows performance counters. It has built-in UI dashboard and Rest API. Collected data is stored in-memory cache, and/or in LiteDB embedded database, and/or in any custom storage driver. See simple how-to example on https://github.com/magsoft2/Perfon.Net")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("magsoft2")]
 [assembly: AssemblyProduct("Perfon.Mvc")]

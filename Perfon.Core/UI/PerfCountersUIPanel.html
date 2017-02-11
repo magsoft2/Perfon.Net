@@ -15,6 +15,10 @@
              </div>
              <div class="form-group">  
                 <div class="btn btn-default" onclick="addChartBlock()">Add chart</div>
+                <div class="btn btn-default" onclick="resetSettings()">Reset</div>
+             </div>
+        <div class="form-group pull-right">  
+               <div id="pingId"></div>
              </div>
     </form>
     <div id="chartsContainer">
@@ -69,28 +73,59 @@
 
     var graphBlocks = [];
     var graphBlocksDOM = [];
+    var pingTimes = [];
 
 
     $(document).ready(function () {
 
         $("#date1").val(new Date().toISOString().split('T')[0]);
 
-        var num = 8;
-        for(let i=0;i<num;i++)
+        buildChartsPanel();
+       
+    });
+
+    function buildChartsPanel()
+    {
+        var settings = localStorage['perfon.settings'];
+        if(settings ===undefined || settings == null)
+        {
+            settings = {graphBlocks:[]};
+            settings.graphBlocks.push('RequestsCount, num/sec');
+            settings.graphBlocks.push('RequestProcessTime, ms');
+            settings.graphBlocks.push('RequestMaxProcessTime, ms');
+            settings.graphBlocks.push('CPU, %');
+            settings.graphBlocks.push('KBytes req. transmitted, kb/sec');
+            settings.graphBlocks.push('KBytes resp. transmitted, kb/sec');
+            settings.graphBlocks.push('GC 0-gen collections, num');
+            settings.graphBlocks.push('GC 1-gen collections, num');
+        }else{
+            settings = JSON.parse(settings);
+            //console.log('found settings:'+JSON.stringify(settings));
+        }
+
+        for(let i=0;i<settings.graphBlocks.length;i++)
         {
             addChartBlock();
         }
-        graphBlocks[0].selectCounter('RequestsCount, num/sec');
-        graphBlocks[1].selectCounter('RequestProcessTime, ms');
-        graphBlocks[2].selectCounter('RequestMaxProcessTime, ms');
-        graphBlocks[3].selectCounter('CPU, %');
-        graphBlocks[4].selectCounter('KBytes req. transmitted, kb/sec');
-        graphBlocks[5].selectCounter('KBytes resp. transmitted, kb/sec');
-        graphBlocks[6].selectCounter('GC 0-gen collections, num');
-        graphBlocks[7].selectCounter('GC 1-gen collections, num');
-        //graphBlocks[8].selectCounter('BadStatusResponsesCount, num/sec');
-    });
+        for(let i=0;i<settings.graphBlocks.length;i++)
+        {
+            graphBlocks[i].selectCounter(settings.graphBlocks[i]);            
+        }
+        refreshPing();
+    }
 
+    function saveSettings()
+    {
+        settings = {graphBlocks:[]};
+        for(var i=0;i<graphBlocks.length;i++)
+        {
+            if(graphBlocks[i].selectedName!== undefined && graphBlocks[i].selectedName.length > 0)
+            {
+                settings.graphBlocks.push(graphBlocks[i].selectedName);
+            }
+        }
+        localStorage['perfon.settings'] = JSON.stringify(settings);
+    }
     function addChartBlock()
     {   
         var idx = globalChartBlockId++;
@@ -98,6 +133,15 @@
         graphBlocks.push(gr);
         graphBlocksDOM.push(gr.generateGraphBlockDOM($('#chartsContainer')));
         gr.refresh();
+    }
+    function resetSettings()
+    {
+                //graphBlocks.splice(0, graphBlocks.length);
+                //graphBlocksDOM.splice(0, graphBlocks.length);
+        $('#chartsContainer .glyphicon-trash').each(function(item) {deleteChartBlock({target:this});});
+        localStorage.removeItem('perfon.settings');
+        buildChartsPanel();
+        saveSettings();
     }
     function deleteChartBlock(event)
     {
@@ -109,6 +153,7 @@
             graphBlocks.splice(idx,1);
             graphBlocksDOM.splice(idx,1);
             $(event.target).closest('.graph-block').remove();
+            saveSettings();
         }
     }
     
@@ -197,7 +242,9 @@
         }
         this.updatePerfCounterChartBlock = function()
         {
-            self.refreshPerfCounter($(self.graphBlockDOM).find(".perfcounter-name").first().val(), $("#date1").val(), self.graphDyg);
+            self.selectedName = $(self.graphBlockDOM).find(".perfcounter-name").first().val();
+            self.refreshPerfCounter(self.selectedName, $("#date1").val(), self.graphDyg);
+            
         }
         this.refreshPerfCounter = function(name, date, graph){
             console.log("update counter "+name+", "+self.dataArray.lentgh);
@@ -244,6 +291,7 @@
                         'file': self.dataArray
                     });
                 }
+                
             });
         }
 
@@ -261,7 +309,7 @@
             $('<div class="labelsDiv pull-right"></div>').appendTo(block);
             $('<div class="chart" style="width: 100%; height: 250px;"></div>').appendTo(block);
 
-            $(block).find('select').on('change', self.updatePerfCounterChartBlock);
+            $(block).find('select').on('change', function(){ self.updatePerfCounterChartBlock(); saveSettings();});
             $(block).find('.glyphicon-trash').on('click', deleteChartBlock);
 
             this.graphBlockDOM = block;
@@ -275,7 +323,8 @@
             {
                 $(self.graphBlockDOM).find(".perfcounter-name").first().val(name).change();
             }
-            this.selectedName = name;
+            self.selectedName = name;
+            saveSettings();
         }
     }
 
@@ -284,13 +333,35 @@
         graphBlocks.forEach(function(self){
             self.updatePerfCounterChartBlock();
         });
+
+        if(pingTimes.length > 5)
+        {
+            pingTimes.splice(0,pingTimes.length-5);
+        }
+
+        refreshPing();
     }        
 
+    function refreshPing()
+    {
+        var avg = 0;
+        if(pingTimes.length > 0)
+        {
+            for(let i=0;i<pingTimes.length;i++)
+            {   
+                avg += pingTimes[i];
+            }
+            $('#pingId').text("Ping: "+new Number(avg/pingTimes.length).toFixed(0)+" ms");
+        }
+    }
     function getPerfCountersList(){
         return $.get(uri);
     }
     function getPerfCounterTrack(name, date, skip){
-        return $.get(uri+'?name='+encodeURI(name)+'&date='+date+'&skip='+skip);
+        var start = performance.now();
+            
+        return $.get(uri+'?name='+encodeURI(name)+'&date='+date+'&skip='+skip).then(function(data){ pingTimes.push(performance.now()-start);
+            return data;});
     }
 
 </script>
