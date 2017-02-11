@@ -9,7 +9,7 @@
     <projectUrl>http://perfon.1gb.ru/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>MVC 5  support has been added</releaseNotes>
+    <releaseNotes>MVC 5  support has been added. LiteDB file size has been optimized. UI dashboard has been improved.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Performance Monitoring Web Asp.Net MVC 5 .Net </tags>
 	<dependencies>

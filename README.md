@@ -46,11 +46,11 @@ Perfon.Net provides Web Api for getting performance counters and built-in dashbo
 It could be tested on the Demo site: [http://perfon.1gb.ru/api/perfcountersui](http://perfon.1gb.ru/api/perfcountersui "http://perfon.1gb.ru/api/perfcountersui")
 
 
-Counter values have need verified with counters of JMeter and Windows PerfMon for both WebApi and MVC projects.
-(TODO: add comparison images)
+Counter values have need verified with counters of JMeter and Windows PerfMon for both WebApi and MVC projects under JMeter stress tests.
 
 
 --
+# How to use:
 
 ### Perfon.WebApi 
 A wrapper for painless use Perfon with Web Api 2 projects.
@@ -73,8 +73,8 @@ A wrapper for painless use Perfon with Web Api 2 projects.
     PerfMonitor.Configuration.EnablePerfApi = true; // Enable getting perf values by API GET addresses 'api/perfcounters' and  'api/perfcounters?name={name}'
     PerfMonitor.Configuration.EnablePerfUIApi = true; // Enable getting UI html page with perf counters values by API GET 'api/perfcountersui' or 'api/perfcountersuipanel'
             
-	//Start the poll with period 2000ms = 2sec
-    PerfMonitor.Start(GlobalConfiguration.Configuration, 2000);
+	//Start the poll with period 5000ms = 5sec
+    PerfMonitor.Start(GlobalConfiguration.Configuration, 5000);
 ```
 
 Note, that you need to enable attribute routing via config.MapHttpAttributeRoutes() in your Web Api application;
@@ -101,7 +101,7 @@ A wrapper for painless use Perfon with Web Mvc 5 projects.
     PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan = 0;
     PerfMonitor.Configuration.EnablePerfApi = true; 
     PerfMonitor.Configuration.EnablePerfUIApi = true;
-    PerfMonitor.Start(this, RouteTable.Routes, 2000);
+    PerfMonitor.Start(this, RouteTable.Routes, 5000);
 ```
 
 --
@@ -129,7 +129,6 @@ License: MIT
 --
 
 ### TODO:
-* add sample for custom counter.
 * Add description of options and conventions
 * Implement PostgreSQL storage for performance counters data.
 * Add more perf counters (GC time )
