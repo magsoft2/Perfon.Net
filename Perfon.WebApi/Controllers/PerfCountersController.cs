@@ -9,6 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using Perfon.Core;
 using Perfon.Core.PerfCounterStorages;
+using Perfon.Interfaces.PerfCounterStorage;
 using Perfon.WebApi;
 
 namespace Perfon.WebApi
@@ -67,7 +68,7 @@ namespace Perfon.WebApi
             }
 
             string key = name + date.GetHashCode();
-            var res = MemoryCache.Default.Get(key) as IEnumerable<PerfCounterValue>;
+            var res = MemoryCache.Default.Get(key) as IEnumerable<IPerfCounterValue>;
 
             if (res == null || res.Count() <= 0)
             {

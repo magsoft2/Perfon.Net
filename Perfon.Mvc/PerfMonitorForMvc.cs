@@ -9,7 +9,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Perfon.Core;
+using Perfon.Core.Common;
 using Perfon.Core.PerfCounterStorages;
+using Perfon.Interfaces.Common;
+using Perfon.Interfaces.PerfCounterStorage;
 using Perfon.Mvc.Filters;
 
 namespace Perfon.Mvc
@@ -37,7 +40,7 @@ namespace Perfon.Mvc
         /// <summary>
         /// Reports about errors and exceptions occured.
         /// </summary>
-        public event EventHandler<Perfon.Core.ErrorEventArgs> OnError;
+        public event EventHandler<IPerfonErrorEventArgs> OnError;
 
 
         public PerfMonitorForMvc()
@@ -81,10 +84,10 @@ namespace Perfon.Mvc
         /// <summary>
         /// Start polling and saving perf counters. Period is in ms
         /// </summary>
-        /// <param name="pollPeriod_ms">Poll period, ms</param>
-        public void Start(HttpApplication app, RouteCollection routes, int pollPeriod_ms)
+        /// <param name="pollPeriod_sec">Poll period, ms</param>
+        public void Start(HttpApplication app, RouteCollection routes, int pollPeriod_sec)
         {
-            PerfMonitorBase.Start(pollPeriod_ms);
+            PerfMonitorBase.Start(pollPeriod_sec);
 
             app.Application[EnumKeyNames.PerfMonitorLib.ToString()] = this;
 

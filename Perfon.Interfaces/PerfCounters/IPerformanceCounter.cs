@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Perfon.Core.Notifications;
-namespace Perfon.Core.PerfCounters
+using Perfon.Interfaces;
+using Perfon.Interfaces.Notifications;
+using Perfon.Interfaces.PerfCounterStorage;
+
+namespace Perfon.Interfaces.PerfCounters
 {
     /// <summary>
     /// Common perf counter interface
@@ -78,6 +81,6 @@ namespace Perfon.Core.PerfCounters
         /// Get current counter value, for pass it to Counter Storage
         /// </summary>
         /// <returns></returns>
-        IPerfCounterData GetPerfCounterData();
+        IPerfCounterInputData GetPerfCounterData();
     }
 }

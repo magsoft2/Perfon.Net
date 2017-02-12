@@ -9,8 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using Perfon.Core.Common;
 using Perfon.Core.PerfCounters;
 using Perfon.Core.PerfCounterStorages;
+using Perfon.Core.PerfCounterStorages.CSVFileStorage;
+using Perfon.Core.PerfCounterStorages.InMemoryCacheStorage;
+using Perfon.Interfaces.Common;
+using Perfon.Interfaces.PerfCounters;
+using Perfon.Interfaces.PerfCounterStorage;
 
 namespace Perfon.Core
 {
@@ -24,7 +30,7 @@ namespace Perfon.Core
         /// <summary>
         /// Reports about errors and exceptions occured.
         /// </summary>
-        public event EventHandler<ErrorEventArgs> OnError;
+        public event EventHandler<IPerfonErrorEventArgs> OnError;
 
         /// <summary>
         /// Settings for Perfon engine
@@ -214,13 +220,13 @@ namespace Perfon.Core
         /// <summary>
         /// Start polling and saving perf counters. Period is in ms
         /// </summary>
-        /// <param name="pollPeriod_ms">Poll period, ms</param>
-        public void Start(int pollPeriod_ms)
+        /// <param name="pollPeriod_sec">Poll period, sec</param>
+        public void Start(int pollPeriod_sec)
         {
             AppDomain.MonitoringIsEnabled = true;
 
-            PollPeriod = pollPeriod_ms;
-            PollPeriod_RevSec = 1.0f / (PollPeriod/1000.0f);
+            PollPeriod_ms = pollPeriod_sec*1000;
+            PollPeriod_RevSec = 1.0f / (PollPeriod_ms/1000.0f);
 
             //Tune perf counters scale coefficients
             cpuUsage.PostProcessMultiplyCoeff = 100 * 1.0f / 1000 * PollPeriod_RevSec;
@@ -243,7 +249,7 @@ namespace Perfon.Core
                 timer.Dispose();
             }
 
-            timer = new Timer(TimerTicker, null, PollPeriod, PollPeriod);
+            timer = new Timer(TimerTicker, null, PollPeriod_ms, PollPeriod_ms);
 
         }
         /// <summary>
@@ -328,7 +334,7 @@ namespace Perfon.Core
 
         private Timer timer { get; set; }
 
-        private int PollPeriod { get; set; }
+        private int PollPeriod_ms { get; set; }
         private float PollPeriod_RevSec { get; set; }
 
 
@@ -385,10 +391,15 @@ namespace Perfon.Core
                     {
                         item.Reset();
                     }
-
+                    //Stopwatch sw = Stopwatch.StartNew();
                     foreach (var item in storagesList)
                     {
                         item.StorePerfCounters(listTemp);
+                    }
+                    //sw.Stop();
+                    //if (sw.Elapsed.TotalMilliseconds > 500)
+                    {
+                       // OnError(null, new ErrorEventArgs("Storing counters:" + sw.Elapsed.TotalMilliseconds.ToString("n0") + " ms"));
                     }
                 }                
 
@@ -397,7 +408,7 @@ namespace Perfon.Core
             {
                 if (OnError != null)
                 {
-                    OnError(new object(), new ErrorEventArgs(exc.ToString()));
+                    OnError(new object(), new PerfonErrorEventArgs(exc.ToString()));
                 }
             }
         }

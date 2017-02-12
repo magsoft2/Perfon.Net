@@ -1,5 +1,7 @@
 packages
 BuildNuget
+TestStoragesConsole
+Perfon.StorageDrivers
 /Perfon.WebApi/bin/Debug
 /Perfon.WebApi/bin/Release
 /Perfon.WebApi/obj/Debug
@@ -17,3 +19,7 @@ BuildNuget
 /TestMvcApp/obj/Release
 /TestMvcApp/bin
 /TestMvcApp/obj/Debug
+/Perfon.Interfaces/bin/Debug
+/Perfon.Interfaces/bin/Release
+/Perfon.Interfaces/obj/Debug
+/Perfon.Interfaces/obj/Release

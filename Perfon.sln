@@ -11,6 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMvcApp", "TestMvcApp\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfon.Mvc", "Perfon.Mvc\Perfon.Mvc.csproj", "{C72EEB48-14A1-49B0-A61D-EB3565978E31}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestStoragesConsole", "TestStoragesConsole\TestStoragesConsole.csproj", "{6911B748-7B67-42E6-AC3D-E30205DC587D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfon.Interfaces", "Perfon.Interfaces\Perfon.Interfaces.csproj", "{44DF0ACE-1BA3-4A58-B424-B2B140A28312}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Perfon.StorageDrivers", "Perfon.StorageDrivers", "{89F78571-8584-4F7C-837A-01FE28836E61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Perfon.Storage.PostgreSql", "Perfon.StorageDrivers\Perfon.Storage.PostgreSql\Perfon.Storage.PostgreSql.csproj", "{93424D43-76DE-45CC-9529-6FBA5F98DA01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,8 +45,23 @@ Global
 		{C72EEB48-14A1-49B0-A61D-EB3565978E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C72EEB48-14A1-49B0-A61D-EB3565978E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C72EEB48-14A1-49B0-A61D-EB3565978E31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6911B748-7B67-42E6-AC3D-E30205DC587D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6911B748-7B67-42E6-AC3D-E30205DC587D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6911B748-7B67-42E6-AC3D-E30205DC587D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6911B748-7B67-42E6-AC3D-E30205DC587D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44DF0ACE-1BA3-4A58-B424-B2B140A28312}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44DF0ACE-1BA3-4A58-B424-B2B140A28312}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44DF0ACE-1BA3-4A58-B424-B2B140A28312}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44DF0ACE-1BA3-4A58-B424-B2B140A28312}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93424D43-76DE-45CC-9529-6FBA5F98DA01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93424D43-76DE-45CC-9529-6FBA5F98DA01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93424D43-76DE-45CC-9529-6FBA5F98DA01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93424D43-76DE-45CC-9529-6FBA5F98DA01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{93424D43-76DE-45CC-9529-6FBA5F98DA01} = {89F78571-8584-4F7C-837A-01FE28836E61}
 	EndGlobalSection
 EndGlobal

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using Perfon.Core;
 using Perfon.Core.PerfCounterStorages;
+using Perfon.Interfaces.PerfCounterStorage;
 using Perfon.Mvc;
 
 namespace Perfon.Mvc.Controllers
@@ -81,13 +82,16 @@ namespace Perfon.Mvc.Controllers
 			}
 
 			string key = name + date.GetHashCode();
-			var res = MemoryCache.Default.Get(key) as IEnumerable<PerfCounterValue>;
+			var res = MemoryCache.Default.Get(key) as IEnumerable<IPerfCounterValue>;
 
 			if (res == null || res.Count() <= 0)
 			{
 				// Not the best solution. Use Lazy here??
 				res = await Db.QueryCounterValues(name, date);
-				MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(3)));
+                if (res != null)
+                {
+                    MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(3)));
+                }
 			}
 
 			if (res != null && skip2 > 0)

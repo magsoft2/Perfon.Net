@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Perfon.Core.Notifications;
+using Perfon.Interfaces.Notifications;
+using Perfon.Interfaces.PerfCounters;
+using Perfon.Interfaces.PerfCounterStorage;
 
 namespace Perfon.Core.PerfCounters
 {
@@ -106,7 +109,7 @@ namespace Perfon.Core.PerfCounters
         public IList<IThresholdNotification> Thresholds { get; private set; }
 
 
-        public void AddThreshold(Notifications.IThresholdNotification thr)
+        public void AddThreshold(IThresholdNotification thr)
         {
             Thresholds.Add(thr);
         }
@@ -115,9 +118,9 @@ namespace Perfon.Core.PerfCounters
         /// Get current counter value, for pass it to Counter Storage
         /// </summary>
         /// <returns></returns>
-        public IPerfCounterData GetPerfCounterData()
+        public IPerfCounterInputData GetPerfCounterData()
         {
-            return new PerfCounterData(Name, GetValue(), GetFormattedValue());
+            return new PerfCounterInputData(Name, GetValue(), GetFormattedValue());
         }
 
 

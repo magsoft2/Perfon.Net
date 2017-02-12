@@ -21,6 +21,7 @@ You could develop own storage driver by implementing simple interface.
 Custom counters could be impelemented easily deriving from Perfon.Net base performance counters.
 Threshold notifications could be set on counters.
 
+A list of additional storages: Perfon.Storage.PostgreSql 
 
 A list of implemented performance counters:
 * Number of requests per second
@@ -55,7 +56,8 @@ Counter values have need verified with counters of JMeter and Windows PerfMon fo
 ### Perfon.WebApi 
 A wrapper for painless use Perfon with Web Api 2 projects.
 
-	How to use:
+How to use:
+
 1. Add a reference to Perfon.WebApi.
 
 2. Use it after Web Api application configuration code:
@@ -65,19 +67,23 @@ A wrapper for painless use Perfon with Web Api 2 projects.
 	PerfMonitor = new PerfMonitorForWebApi();
     //PerfMonitor.RegisterCSVFileStorage(AppDomain.CurrentDomain.BaseDirectory); -> use it if you want to save counters to CSV file
     //PerfMonitor.RegisterInMemoryCacheStorage(60*60*1); -> use it if you want to save counters in memory wih expiration 1 hour = 60*60 sec
-    PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory); //use it for storing perfomance counters data to LiteDB file
-    PerfMonitor.OnError += (a, b) => Console.WriteLine("PerfLibForWebApi:"+b.Message); // NOT mandatory: if you need error report from the lib    
+    PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory+"\\path_to_db"); //use it for storing perfomance counters data to LiteDB file
+    PerfMonitor.OnError += (a, errArg) => Console.WriteLine("PerfLibForWebApi:"+errArg.Message); // NOT mandatory: if you need error report from the lib    
     
 	//NOT mandatory: Change some default settings if needed
 	PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan = 0; //Do not store perf values if RequestsNum = 0 during poll period
     PerfMonitor.Configuration.EnablePerfApi = true; // Enable getting perf values by API GET addresses 'api/perfcounters' and  'api/perfcounters?name={name}'
     PerfMonitor.Configuration.EnablePerfUIApi = true; // Enable getting UI html page with perf counters values by API GET 'api/perfcountersui' or 'api/perfcountersuipanel'
             
-	//Start the poll with period 5000ms = 5sec
-    PerfMonitor.Start(GlobalConfiguration.Configuration, 5000);
+	//Start the poll with period 10sec
+    PerfMonitor.Start(GlobalConfiguration.Configuration, 10);
 ```
 
-Note, that you need to enable attribute routing via config.MapHttpAttributeRoutes() in your Web Api application;
+
+LiteDb file size for daily data with poll period 10 sec is ~4Mb, for 5 sec period ~ 7Mb
+
+
+Note, that you need to enable attribute routing via config.MapHttpAttributeRoutes() in your Web Api application for getting perf values through Rest Api and use DashboardUI API;
 
 Features:
 * Use PerfMonitor.UIPage and PerfMonitor.UIPanel for getting UI html as string for return it in your own controllers
@@ -94,14 +100,14 @@ A wrapper for painless use Perfon with Web Mvc 5 projects.
 ```c#
 	Perfon.Mvc.PerfMonitorForMvc PerfMonitor = new Perfon.Mvc.PerfMonitorForMvc();
 
-    PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
+    PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory+"\\path_to_db");
     PerfMonitor.OnError += (a, b) =>{ };
 
     //Change some default settings if needed
     PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan = 0;
     PerfMonitor.Configuration.EnablePerfApi = true; 
     PerfMonitor.Configuration.EnablePerfUIApi = true;
-    PerfMonitor.Start(this, RouteTable.Routes, 5000);
+    PerfMonitor.Start(this, RouteTable.Routes, 10);
 ```
 
 --
@@ -113,14 +119,8 @@ It does not uses windows perfomance counters, so it could used with non-privileg
 --
 
 
-### TestServer
-Example of using Perfon.WebApi. One could run and monitor with Perfon using JMeterTests stress tests.
-
---
-
-
-### TestMvcApp
-Example of using Perfon.Mvc.
+### TestServer, TestMvcApp
+Example of using Perfon.WebApi and Perfon.Mvc. One could run and monitor with Perfon using JMeterTests stress tests.
 
 --
 

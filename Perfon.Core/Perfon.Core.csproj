@@ -46,28 +46,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ErrorEventArgs.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Notifications\ThresholdMaxNotification.cs" />
-    <Compile Include="Notifications\IThresholdNotification.cs" />
     <Compile Include="Notifications\ThresholdBaseNotification.cs" />
     <Compile Include="Notifications\ThreshouldNotificationEventArg.cs" />
-    <Compile Include="PerfCounterStorages\PerfCountersDoc.cs" />
-    <Compile Include="PerfCounterStorages\PerfCounterValue2.cs" />
-    <Compile Include="PerfCounterStorages\PerfCounterInMemoryCacheStorage.cs" />
-    <Compile Include="PerfCounterStorages\PerfCounterLiteDbStorage.cs" />
-    <Compile Include="PerfonConfiguration.cs" />
-    <Compile Include="PerfCounters\IPerfCounterData.cs" />
-    <Compile Include="PerfCounters\PerfCounterData.cs" />
+    <Compile Include="PerfCounterStorages\LiteDbStorage\PerfCounterLiteDbStorage.cs" />
+    <Compile Include="PerfCounterStorages\LiteDbStorage\PerfCountersDoc.cs" />
+    <Compile Include="PerfCounterStorages\LiteDbStorage\PerfCounterLiteDbDataBlock.cs" />
+    <Compile Include="PerfCounterStorages\InMemoryCacheStorage\PerfCounterInMemoryCacheStorage.cs" />
+    <Compile Include="Common\PerfonConfiguration.cs" />
+    <Compile Include="PerfCounters\PerfCounterInputData.cs" />
     <Compile Include="PerfCounters\PerformanceSumAbsoluteCounter.cs" />
     <Compile Include="PerfCounters\PerformanceDifferenceCounter.cs" />
     <Compile Include="PerfCounters\PerformanceMaxCounter.cs" />
     <Compile Include="PerfCounters\PerformanceCounterBase.cs" />
-    <Compile Include="PerfCounterStorages\IPerfomanceCountersStorage.cs" />
-    <Compile Include="PerfCounterStorages\PerfCounterCSVFileStorage.cs" />
+    <Compile Include="PerfCounterStorages\CSVFileStorage\PerfCounterCSVFileStorage.cs" />
     <Compile Include="PerfCounterStorages\PerfCounterValue.cs" />
     <Compile Include="PerfCounters\PerformanceAverageCounter.cs" />
-    <Compile Include="ErrorEventArgs.cs" />
-    <Compile Include="PerfCounters\IPerformanceCounter.cs" />
     <Compile Include="PerfMonitor.cs" />
     <Compile Include="PerfCounters\PerformanceSumCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +76,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\PerfCountersUIPanel.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Perfon.Interfaces\Perfon.Interfaces.csproj">
+      <Project>{44df0ace-1ba3-4a58-b424-b2b140a28312}</Project>
+      <Name>Perfon.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

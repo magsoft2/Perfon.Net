@@ -109,6 +109,10 @@
       <Project>{15ea05e4-0bcf-4a35-b177-59b932869414}</Project>
       <Name>Perfon.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Perfon.Interfaces\Perfon.Interfaces.csproj">
+      <Project>{44df0ace-1ba3-4a58-b424-b2b140a28312}</Project>
+      <Name>Perfon.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Perfon.WebApi\Perfon.WebApi.csproj">
       <Project>{312a6ad5-c6fe-40ec-a923-a24c1620466c}</Project>
       <Name>Perfon.WebApi</Name>

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Perfon.Core.PerfCounters;
+using Perfon.Interfaces.Notifications;
+using Perfon.Interfaces.PerfCounters;
 
 namespace Perfon.Core.Notifications
 {
@@ -26,9 +28,9 @@ namespace Perfon.Core.Notifications
 
         public abstract bool TestThresholdOk(IPerformanceCounter counter);
 
-        public event EventHandler<ThreshouldNotificationEventArg> OnThresholdViolated;
+        public event EventHandler<IThreshouldNotificationEventArg> OnThresholdViolated;
 
-        public event EventHandler<ThreshouldNotificationEventArg> OnThresholdViolationRecovered;
+        public event EventHandler<IThreshouldNotificationEventArg> OnThresholdViolationRecovered;
 
         protected void RaiseThresholdViolated(ThreshouldNotificationEventArg arg)
         {

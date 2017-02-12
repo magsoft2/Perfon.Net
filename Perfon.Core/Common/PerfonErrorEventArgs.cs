@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Perfon.Interfaces.Common;
 
-namespace Perfon.Core
+namespace Perfon.Core.Common
 {
     /// <summary>
-    /// User for reporting errors occured inside PerfMonLib to clients
+    /// Used for reporting errors occured inside PerfMonLib to clients
     /// </summary>
-    public class ErrorEventArgs : EventArgs
+    public class PerfonErrorEventArgs : EventArgs, IPerfonErrorEventArgs
     {
         /// <summary>
         /// Description of the error
         /// </summary>
         public string Message { get; set; }
 
-        public ErrorEventArgs(string message)
+        public PerfonErrorEventArgs(string message)
         {
             Message = message;
         }

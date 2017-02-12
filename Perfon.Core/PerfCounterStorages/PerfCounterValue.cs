@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Perfon.Interfaces.PerfCounterStorage;
 
 namespace Perfon.Core.PerfCounterStorages
 {
     /// <summary>
-    /// Used for obtaining perf counter time series
-    /// 
+    /// Data block of Perf Counter.
+    /// Used for obtaining perf counter time series from storages
     /// </summary>
-    public struct PerfCounterValue
+    public struct PerfCounterValue : IPerfCounterValue
     {
         //public PerfCounterValue()
         //{
@@ -23,7 +24,7 @@ namespace Perfon.Core.PerfCounterStorages
             Value = value;
         }
 
-        public DateTime Timestamp { get; set; }
-        public float Value { get; set; }
+        public DateTime Timestamp { get; private set; }
+        public float Value { get; private set; }
     }
 }

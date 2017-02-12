@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Perfon.Core
+namespace Perfon.Core.Common
 {
     /// <summary>
     /// Perfon configuration settings

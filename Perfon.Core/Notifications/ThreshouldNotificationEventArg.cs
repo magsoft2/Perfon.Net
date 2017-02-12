@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Perfon.Interfaces.Notifications;
 
 namespace Perfon.Core.Notifications
 {
-    public class ThreshouldNotificationEventArg:EventArgs
+    public class ThreshouldNotificationEventArg:EventArgs, IThreshouldNotificationEventArg
     {
         public string Message { get; private set; }
 

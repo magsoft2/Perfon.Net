@@ -21,7 +21,7 @@ namespace TestMvcApp
 
             Perfon.Mvc.PerfMonitorForMvc PerfMonitor = new Perfon.Mvc.PerfMonitorForMvc();
 
-            PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
+            PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory);
             PerfMonitor.OnError += (a, b) =>
             {
                 File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\errors.log", "\n" + DateTime.Now.ToString() + " " + b.Message);
@@ -36,7 +36,7 @@ namespace TestMvcApp
             PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan =-1;
             PerfMonitor.Configuration.EnablePerfApi = true; 
             PerfMonitor.Configuration.EnablePerfUIApi = true;
-            PerfMonitor.Start(this, RouteTable.Routes, 2000);
+            PerfMonitor.Start(this, RouteTable.Routes, 5);
             
         }
     }

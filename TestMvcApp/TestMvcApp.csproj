@@ -132,6 +132,10 @@
       <Project>{15ea05e4-0bcf-4a35-b177-59b932869414}</Project>
       <Name>Perfon.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Perfon.Interfaces\Perfon.Interfaces.csproj">
+      <Project>{44df0ace-1ba3-4a58-b424-b2b140a28312}</Project>
+      <Name>Perfon.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Perfon.Mvc\Perfon.Mvc.csproj">
       <Project>{c72eeb48-14a1-49b0-a61d-eb3565978e31}</Project>
       <Name>Perfon.Mvc</Name>

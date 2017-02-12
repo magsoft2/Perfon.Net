@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Perfon.Core.PerfCounters;
+using Perfon.Interfaces.Common;
 
-namespace Perfon.Core.PerfCounterStorages
+namespace Perfon.Interfaces.PerfCounterStorage
 {
     /// <summary>
     /// Interface should be implemented by storage drivers.
@@ -13,11 +13,12 @@ namespace Perfon.Core.PerfCounterStorages
     public interface IPerfomanceCountersStorage
     {
         /// <summary>
-        /// Store a list of perf counter values
+        /// Store a list of perf counter values,
+        /// with optional TimeStamp and AppId
         /// </summary>
         /// <param name="counters"></param>
         /// <returns></returns>
-        Task StorePerfCounters(IEnumerable<IPerfCounterData> counters);
+        Task StorePerfCounters(IEnumerable<IPerfCounterInputData> counters, DateTime? timeStamp = null, string appId = null);
 
         /// <summary>
         /// Get counter history track for specified date
@@ -25,7 +26,7 @@ namespace Perfon.Core.PerfCounterStorages
         /// <param name="counterName"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip = 0);
+        Task<IEnumerable<IPerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip = 0, string appId = null);
 
         /// <summary>
         /// Get list of names of all perf counters in the storage
@@ -36,7 +37,7 @@ namespace Perfon.Core.PerfCounterStorages
         /// <summary>
         /// Reports about errors and exceptions occured in the storage driver
         /// </summary>
-        event EventHandler<ErrorEventArgs> OnError;
+        event EventHandler<IPerfonErrorEventArgs> OnError;
     }
 
 }

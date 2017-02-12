@@ -9,12 +9,12 @@
     <projectUrl>http://perfon.1gb.ru/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>MVC 5  support has been added. LiteDB file size has been optimized. UI dashboard has been improved.</releaseNotes>
+    <releaseNotes>Storing in LiteDB optimziations: file size and speed. Support of PostgreSQL for perfomance counters data storing.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Performance Monitoring Web Asp.Net MVC 5 .Net </tags>
 	<dependencies>
       <dependency id="Newtonsoft.Json" version="9.0.1" />
-      <dependency id="Perfon.Core" version="1.0.3" />
+      <dependency id="Perfon.Core" version="1.0.4" />
     </dependencies>
   </metadata>
 </package>

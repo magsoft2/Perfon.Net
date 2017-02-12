@@ -28,11 +28,7 @@ namespace TestServer
             //PerfMonitor.RegisterCSVFileStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
             //PerfMonitor.RegisterInMemoryCacheStorage(60);
             PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
-            PerfMonitor.OnError += (a, b) => 
-            {                
-                File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\errors.log", "\n"+DateTime.Now.ToString()+" "+ b.Message);
-                Console.WriteLine("PerfLibForWebApi:" + b.Message);
-            };
+            PerfMonitor.OnError += PerfMonitor_OnError; 
             var thr1 = new ThresholdMaxNotification(500);
             thr1.OnThresholdViolated += (a, b) => Console.WriteLine(b.Message);
             thr1.OnThresholdViolationRecovered += (a, b) => Console.WriteLine(b.Message);
@@ -42,8 +38,14 @@ namespace TestServer
             PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan = 0; //Do not store perf values if RequestsNum = 0 during poll period
             PerfMonitor.Configuration.EnablePerfApi = true; // Enable getting perf values by API GET addresses 'api/perfcounters' and  'api/perfcounters/{name}'
             PerfMonitor.Configuration.EnablePerfUIApi = true; // Enable getting UI html page with perf counters values by API GET 'api/perfcountersui' or 'api/perfcountersuipanel'
-            PerfMonitor.Start(GlobalConfiguration.Configuration, 5000);
+            PerfMonitor.Start(GlobalConfiguration.Configuration, 5);
             
+        }
+
+        void PerfMonitor_OnError(object sender, Perfon.Interfaces.Common.IPerfonErrorEventArgs e)
+        {
+            File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\errors.log", "\n" + DateTime.Now.ToString() + " " + e.Message);
+            //Console.WriteLine("PerfLibForWebApi:" + e.Message);
         }
 
         protected void Application_End()

@@ -4,9 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Perfon.Core.Common;
 using Perfon.Core.PerfCounters;
+using Perfon.Interfaces.Common;
+using Perfon.Interfaces.PerfCounterStorage;
 
-namespace Perfon.Core.PerfCounterStorages
+namespace Perfon.Core.PerfCounterStorages.CSVFileStorage
 {
     /// <summary>
     /// Driver for store/restore performance counter values in simple CSV file
@@ -31,7 +34,7 @@ namespace Perfon.Core.PerfCounterStorages
         /// </summary>
         /// <param name="counters"></param>
         /// <returns></returns>
-        public async Task StorePerfCounters(IEnumerable<IPerfCounterData> counters)
+        public async Task StorePerfCounters(IEnumerable<IPerfCounterInputData> counters, DateTime? now = null, string appId = null)
         {
             try
             {
@@ -67,14 +70,14 @@ namespace Perfon.Core.PerfCounterStorages
             {
                 if (OnError != null)
                 {
-                    OnError(new object(), new ErrorEventArgs(exc.ToString()));
+                    OnError(new object(), new PerfonErrorEventArgs(exc.ToString()));
                 }
             }
         }
 
-        public Task<IEnumerable<PerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip=0)
+        public Task<IEnumerable<IPerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip = 0, string appId = null)
         {
-            var list = new List<PerfCounterValue>();
+            var list = new List<IPerfCounterValue>();
 
             if (!date.HasValue)
             {
@@ -109,7 +112,7 @@ namespace Perfon.Core.PerfCounterStorages
                 }
             }
 
-            return Task.FromResult(list as IEnumerable<PerfCounterValue>);
+            return Task.FromResult(list as IEnumerable<IPerfCounterValue>);
         }
 
         public Task<IEnumerable<string>> GetCountersList()
@@ -140,7 +143,7 @@ namespace Perfon.Core.PerfCounterStorages
         /// <summary>
         /// Reports about errors and exceptions occured.
         /// </summary>
-        public event EventHandler<ErrorEventArgs> OnError;
+        public event EventHandler<IPerfonErrorEventArgs> OnError;
 
 
 

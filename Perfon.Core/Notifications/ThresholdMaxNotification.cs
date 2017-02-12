@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Perfon.Core.PerfCounters;
+using Perfon.Interfaces.PerfCounters;
 
 namespace Perfon.Core.Notifications
 {

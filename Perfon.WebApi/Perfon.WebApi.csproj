@@ -79,6 +79,10 @@
       <Project>{15ea05e4-0bcf-4a35-b177-59b932869414}</Project>
       <Name>Perfon.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Perfon.Interfaces\Perfon.Interfaces.csproj">
+      <Project>{44df0ace-1ba3-4a58-b424-b2b140a28312}</Project>
+      <Name>Perfon.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

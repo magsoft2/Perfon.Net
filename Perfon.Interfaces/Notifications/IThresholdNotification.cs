@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Perfon.Core.PerfCounters;
+using Perfon.Interfaces.PerfCounters;
 
-namespace Perfon.Core.Notifications
+namespace Perfon.Interfaces.Notifications
 {
     /// <summary>
     /// Used for tracking threshold of perf counters.
@@ -32,10 +32,10 @@ namespace Perfon.Core.Notifications
         /// <summary>
         /// Occurs when threshold goes from nonViolated to violated state
         /// </summary>
-        event EventHandler<ThreshouldNotificationEventArg> OnThresholdViolated;
+        event EventHandler<IThreshouldNotificationEventArg> OnThresholdViolated;
         /// <summary>
         /// Occurs when threshold goes from Violated to non-violated state
         /// </summary>
-        event EventHandler<ThreshouldNotificationEventArg> OnThresholdViolationRecovered;
+        event EventHandler<IThreshouldNotificationEventArg> OnThresholdViolationRecovered;
     }
 }
