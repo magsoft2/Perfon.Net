@@ -68,7 +68,8 @@ How to use:
     //PerfMonitor.RegisterCSVFileStorage(AppDomain.CurrentDomain.BaseDirectory); -> use it if you want to save counters to CSV file
     //PerfMonitor.RegisterInMemoryCacheStorage(60*60*1); -> use it if you want to save counters in memory wih expiration 1 hour = 60*60 sec
     PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory+"\\path_to_db"); //use it for storing perfomance counters data to LiteDB file
-    PerfMonitor.OnError += (a, errArg) => Console.WriteLine("PerfLibForWebApi:"+errArg.Message); // NOT mandatory: if you need error report from the lib    
+    //PerfMonitor.RegisterStorages( new Perfon.Storage.PostgreSql.PerfCounterPostgreSqlStorage(@"connection_string")) // For use PostgreSql as Storage
+	PerfMonitor.OnError += (a, errArg) => Console.WriteLine("PerfLibForWebApi:"+errArg.Message); // NOT mandatory: if you need error report from the lib    
     
 	//NOT mandatory: Change some default settings if needed
 	PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan = 0; //Do not store perf values if RequestsNum = 0 during poll period

@@ -28,6 +28,7 @@ namespace TestServer
             //PerfMonitor.RegisterCSVFileStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
             //PerfMonitor.RegisterInMemoryCacheStorage(60);
             PerfMonitor.RegisterLiteDbStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
+            //PerfMonitor.RegisterStorages( new Perfon.Storage.PostgreSql.PerfCounterPostgreSqlStorage(@"connection_string"));
             PerfMonitor.OnError += PerfMonitor_OnError; 
             var thr1 = new ThresholdMaxNotification(500);
             thr1.OnThresholdViolated += (a, b) => Console.WriteLine(b.Message);

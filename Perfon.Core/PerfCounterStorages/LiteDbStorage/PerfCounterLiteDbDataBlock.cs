@@ -71,7 +71,7 @@ namespace Perfon.Core.PerfCounterStorages.LiteDbStorage
             var val = (uint)(packed & ((1 << 20) - 1));
             var bits20 = (uint)((packed >> 20) & ((1 << 20) - 1));
 
-            return new PerfCounterValue(date.AddMilliseconds(val * 100).ToUniversalTime(), (float)bits20 / 10.0f);
+            return new PerfCounterValue(date.AddMilliseconds(val * 100), (float)bits20 / 10.0f);
         }
     }
 }

@@ -47,6 +47,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Npgsql, Version=3.1.9.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Npgsql.3.1.9\lib\net45\Npgsql.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -112,6 +116,10 @@
     <ProjectReference Include="..\Perfon.Interfaces\Perfon.Interfaces.csproj">
       <Project>{44df0ace-1ba3-4a58-b424-b2b140a28312}</Project>
       <Name>Perfon.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Perfon.StorageDrivers\Perfon.Storage.PostgreSql\Perfon.Storage.PostgreSql.csproj">
+      <Project>{93424d43-76de-45cc-9529-6fba5f98da01}</Project>
+      <Name>Perfon.Storage.PostgreSql</Name>
     </ProjectReference>
     <ProjectReference Include="..\Perfon.WebApi\Perfon.WebApi.csproj">
       <Project>{312a6ad5-c6fe-40ec-a923-a24c1620466c}</Project>

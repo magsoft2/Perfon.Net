@@ -27,6 +27,8 @@ namespace Perfon.Core.PerfCounterStorages
         /// </summary>
         public event EventHandler<IPerfonErrorEventArgs> OnError;
 
+        private ConcurrentBag<string> counterNames = new ConcurrentBag<string>();
+
 
         public PerfCounterLiteDbStorage(string pathToDbFolder)
         {
@@ -50,16 +52,31 @@ namespace Perfon.Core.PerfCounterStorages
                     now = nowArg.Value;
                 }
 
+                List<short> counterId = new List<short>();
+
+                bool updateNames = false;
+
+                foreach (var counter in counters)
+                {
+                    if (!counterNames.Contains(counter.Name))
+                    {
+                        updateNames = true;
+                        break;
+                    }
+                    counterId.Add((short)(Tools.CalculateHash(counter.Name) % (ulong)short.MaxValue));
+                }
+
                 var dbName = GetDbWriteName(now);
 
                 //var db = GetFromCacheOrCreate(dbName);
                 using (var db = new LiteDatabase(dbName))
                 {
-                    var names = db.GetCollection("CounterNames");
-
-                    using (var trans = db.BeginTrans())
+                    if (updateNames)
                     {
-                        // Get customer collection
+                        counterId.Clear();
+
+                        var names = db.GetCollection("CounterNames");
+                    
                         foreach (var counter in counters)
                         {
                             try
@@ -71,9 +88,34 @@ namespace Perfon.Core.PerfCounterStorages
                                     doc.Add("Name", counter.Name);
                                     names.Insert(doc);
                                 }
+                                counterNames.Add(counter.Name);
+                            }
+                            catch (Exception exc)
+                            {
+                                if (OnError != null)
+                                {
+                                    OnError(new object(), new PerfonErrorEventArgs(exc.ToString()));
+                                }
+                            }
+                        }
+                    }
 
+                    using (var trans = db.BeginTrans())
+                    {
+                        // Get customer collection
+                        foreach (var counter in counters)
+                        {
+                            try
+                            {
+                                //var col = names.Find(Query.EQ("Name", counter.Name)).FirstOrDefault();
+                                //if (col == null)
+                                //{
+                                //    var doc = new BsonDocument();
+                                //    doc.Add("Name", counter.Name);
+                                //    names.Insert(doc);
+                                //}
 
-                                int collId = counter.Name.GetHashCode();
+                                int collId = (short)(Tools.CalculateHash(counter.Name) % (ulong)short.MaxValue);
                                 int blockId = now.Hour * 12 + now.Minute / 5;
                                 int docId = collId + blockId.GetHashCode();
                                 var countersColl = db.GetCollection<PerfCountersDoc>(collId.ToString());
@@ -132,7 +174,7 @@ namespace Perfon.Core.PerfCounterStorages
                 {
                     try
                     {
-                        int id = counterName.GetHashCode();
+                        int id = (short)(Tools.CalculateHash(counterName) % (ulong)short.MaxValue);
                         var countersColl = db.GetCollection<PerfCountersDoc>(id.ToString());
                         var res = countersColl.Find(a => a.CounterName == counterName).OrderBy(a => a.blockId);
                         if (res != null)

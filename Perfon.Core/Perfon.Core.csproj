@@ -46,7 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\ErrorEventArgs.cs" />
+    <Compile Include="Common\PerfonErrorEventArgs.cs" />
+    <Compile Include="Common\Tools.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Notifications\ThresholdMaxNotification.cs" />
     <Compile Include="Notifications\ThresholdBaseNotification.cs" />
