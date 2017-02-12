@@ -21,7 +21,7 @@ You could develop own storage driver by implementing simple interface.
 Custom counters could be impelemented easily deriving from Perfon.Net base performance counters.
 Threshold notifications could be set on counters.
 
-A list of additional storages: Perfon.Storage.PostgreSql 
+A list of additional storages: [Perfon.Storage.PostgreSql](https://github.com/magsoft2/Perfon.Storage.PostgreSql "Perfon.Storage.PostgreSql") 
 
 A list of implemented performance counters:
 * Number of requests per second
