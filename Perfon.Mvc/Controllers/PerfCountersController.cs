@@ -81,23 +81,24 @@ namespace Perfon.Mvc.Controllers
 				skip2 = skip.Value;
 			}
 
-			string key = name + date.GetHashCode();
+            string key = name + date.GetHashCode() + skip2.GetHashCode();
 			var res = MemoryCache.Default.Get(key) as IEnumerable<IPerfCounterValue>;
 
 			if (res == null || res.Count() <= 0)
 			{
 				// Not the best solution. Use Lazy here??
-				res = await Db.QueryCounterValues(name, date);
+				res = await Db.QueryCounterValues(name, date, skip2);
                 if (res != null)
                 {
                     MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(3)));
                 }
 			}
 
-			if (res != null && skip2 > 0)
-			{
-				res = res.Skip(skip2).ToList();
-			}
+            //if (res != null && skip2 > 0)
+            //{
+            //    res = res.Skip(skip2).ToList();
+            //}
+
 
 			return new CustomJsonResult { Data = res };
 			//return new CustomJsonResult(res, JsonRequestBehavior.AllowGet);
