@@ -50,7 +50,7 @@ Perfon.Net provides Web Api for getting performance counters and built-in dashbo
 It could be tested on the Demo site: [http://perfon.1gb.ru/api/perfcountersui](http://perfon.1gb.ru/api/perfcountersui "http://perfon.1gb.ru/api/perfcountersui")
 
 
-Counter values have need verified with counters of JMeter and Windows PerfMon for both WebApi and MVC projects under JMeter stress tests.
+Counter values have been verified with counters of JMeter and Windows PerfMon for both WebApi and MVC projects under JMeter stress tests.
 
 
 --
