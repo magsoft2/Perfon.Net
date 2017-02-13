@@ -9,7 +9,7 @@
     <projectUrl>http://perfon.1gb.ru/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Storing in LiteDB optimziations: file size and speed. Support of PostgreSQL for perfomance counters data storing.</releaseNotes>
+    <releaseNotes>Support of MySQL for perfomance counters data storing.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Performance Monitoring Web Asp.Net MVC 5 .Net </tags>
 	<dependencies>

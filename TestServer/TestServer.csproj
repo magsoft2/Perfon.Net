@@ -43,6 +43,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\LiteDB.3.0.0\lib\net35\LiteDB.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MySql.Data.6.9.9\lib\net45\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -116,6 +120,10 @@
     <ProjectReference Include="..\Perfon.Interfaces\Perfon.Interfaces.csproj">
       <Project>{44df0ace-1ba3-4a58-b424-b2b140a28312}</Project>
       <Name>Perfon.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Perfon.StorageDrivers\Perfon.Storage.MySql\Perfon.Storage.MySql.csproj">
+      <Project>{9d333e5c-3ea2-4d46-8949-313bd4beca5b}</Project>
+      <Name>Perfon.Storage.MySql</Name>
     </ProjectReference>
     <ProjectReference Include="..\Perfon.StorageDrivers\Perfon.Storage.PostgreSql\Perfon.Storage.PostgreSql.csproj">
       <Project>{93424d43-76de-45cc-9529-6fba5f98da01}</Project>
