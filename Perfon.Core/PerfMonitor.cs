@@ -391,16 +391,17 @@ namespace Perfon.Core
                     {
                         item.Reset();
                     }
-                    Stopwatch sw = Stopwatch.StartNew();
+                    
+                    //Stopwatch sw = Stopwatch.StartNew();
                     foreach (var item in storagesList)
                     {
                         item.StorePerfCounters(listTemp);
                     }
-                    sw.Stop();
-                    if (sw.Elapsed.TotalMilliseconds > 500)
-                    {
-                       OnError(null, new PerfonErrorEventArgs("Storing counters:" + sw.Elapsed.TotalMilliseconds.ToString("n0") + " ms"));
-                    }
+                    //sw.Stop();
+                    //if (sw.Elapsed.TotalMilliseconds > 300)
+                    //{
+                    //   OnError(null, new PerfonErrorEventArgs("Storing counters:" + sw.Elapsed.TotalMilliseconds.ToString("n0") + " ms"));
+                    //}
                 }                
 
             }

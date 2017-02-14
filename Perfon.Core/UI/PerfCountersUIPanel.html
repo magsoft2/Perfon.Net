@@ -265,7 +265,11 @@
             }
             getPerfCounterTrack(name, date, self.dataArray.length).then(function(data)
             {
-                var nowZ = new Date().getTimezoneOffset()* 60 * 1000;
+                var nowZ = 0;
+                if(data.length>0 && data[data.length-1].Timestamp.indexOf('Z') < 0)
+                {
+                    nowZ = new Date().getTimezoneOffset()* 60 * 1000;
+                }
                 if(data !== undefined && data instanceof Array)
                 {
                     var lastTime = new Date();

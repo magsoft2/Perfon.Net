@@ -86,6 +86,8 @@ namespace Perfon.WebApi
         {
             PerfMonitorBase.Start(pollPeriod_sec);
 
+            cfg = httpConfiguration;
+
             httpConfiguration.Filters.Add(new ExceptionCounterFilter(this.PerfMonitorBase));
 
             httpConfiguration.MessageHandlers.Add(new RequestPerfMonitorMessageHandler(this.PerfMonitorBase));
@@ -102,6 +104,11 @@ namespace Perfon.WebApi
         public void Stop()
         {
             PerfMonitorBase.Stop();
+
+            if (cfg != null)
+            {
+                cfg.Properties[EnumKeyNames.PerfMonitorLib.ToString()] = null;
+            }
         }
 
 
@@ -126,6 +133,8 @@ namespace Perfon.WebApi
         /// Inject it into controller!
         /// </summary>
         public IPerfomanceCountersStorage Storage { get; private set; }
-        
+
+
+        private HttpConfiguration cfg = null;
     }
 }

@@ -71,6 +71,8 @@ namespace TestServer
 
         protected void Application_End()
         {
+            //File.AppendAllText(AppDomain.CurrentDomain.BaseDirectory + "\\errors.log", "\nAPP stop!!!!");
+
             PerfMonitor.Stop();
         }
 
