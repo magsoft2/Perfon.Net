@@ -12,6 +12,9 @@ using Newtonsoft.Json.Converters;
 
 namespace Perfon.Mvc
 {
+    /// <summary>
+    /// Handle date format properly
+    /// </summary>
     public class CustomJsonResult : JsonResult
     {
         private const string _dateFormat = "yyyy-MM-dd HH:mm:ss";

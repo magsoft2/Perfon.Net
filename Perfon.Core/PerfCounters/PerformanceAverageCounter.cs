@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Perfon.Core.PerfCounters
 {
     /// <summary>
-    /// Tracking growing up value, returns an averaged value
+    /// Tracking growing up value, returns an averaged per poll period value
     /// One could change perf counter value in a thread safe manner
     /// </summary>
     public class PerformanceAverageCounter : PerformanceCounterBase

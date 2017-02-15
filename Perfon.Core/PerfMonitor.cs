@@ -164,6 +164,9 @@ namespace Perfon.Core
             memoryUsed = new PerformanceSumAbsoluteCounter("Memory, mb", 1.0f/1024/1024);
             countersList.Add(memoryUsed.Name, memoryUsed);
 
+            memorySurvived = new PerformanceSumAbsoluteCounter("Memory survived, kb", 1.0f / 1024);
+            countersList.Add(memorySurvived.Name, memorySurvived);
+
             cpuUsage = new PerformanceDifferenceCounter("CPU, %", 1f, "n2");
             countersList.Add(cpuUsage.Name, cpuUsage);
 
@@ -176,6 +179,7 @@ namespace Perfon.Core
             gcGen2 = new PerformanceDifferenceCounter("GC 2-gen collections, num");
             countersList.Add(gcGen2.Name, gcGen2);
         }
+
 
         /// <summary>
         /// Register perf counter storages
@@ -223,7 +227,10 @@ namespace Perfon.Core
         /// <param name="pollPeriod_sec">Poll period, sec</param>
         public void Start(int pollPeriod_sec)
         {
-            AppDomain.MonitoringIsEnabled = true;
+            if (Configuration.EnableMonitoringCpuTime)
+            {
+                AppDomain.MonitoringIsEnabled = true;
+            }
 
             PollPeriod_ms = pollPeriod_sec*1000;
             PollPeriod_RevSec = 1.0f / (PollPeriod_ms/1000.0f);
@@ -236,7 +243,7 @@ namespace Perfon.Core
                 (item as IPerformanceCounter).ReversedPeriodValue = PollPeriod_RevSec;
             }
 
-            // Add all counter names to db
+            // Add all registered counter names to db
             var listTemp = countersListGeneric.Select(a => a.GetPerfCounterData()).ToList();
             foreach (var item in storagesList)
             {
@@ -351,6 +358,7 @@ namespace Perfon.Core
 
         //Tracked internally
         private IPerformanceCounter memoryUsed;
+        private IPerformanceCounter memorySurvived;
         private IPerformanceCounter cpuUsage;
         private IPerformanceCounter gcGen0;
         private IPerformanceCounter gcGen1;
@@ -422,8 +430,9 @@ namespace Perfon.Core
             gcGen2.Add(GC.CollectionCount(2));
             if (AppDomain.MonitoringIsEnabled)
             {
+                memorySurvived.Add(AppDomain.CurrentDomain.MonitoringSurvivedMemorySize);
+
                 cpuUsage.Add((long)AppDomain.CurrentDomain.MonitoringTotalProcessorTime.TotalMilliseconds/Environment.ProcessorCount);
-                //cpuUsage.Add((long)AppDomain.CurrentDomain.MonitoringTotalAllocatedMemorySize);
             }
         }
     }

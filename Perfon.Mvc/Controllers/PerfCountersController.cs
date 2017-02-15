@@ -17,7 +17,7 @@ namespace Perfon.Mvc.Controllers
 		readonly string keyList = "PerfListCounters";
 
 
-		public IPerfomanceCountersStorage Db
+		private IPerfomanceCountersStorage Db
 		{
 			get
 			{
@@ -73,7 +73,7 @@ namespace Perfon.Mvc.Controllers
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		private async Task<ActionResult> GetTrack(string name, DateTime? date = null, int? skip = null)
+		private async Task<ActionResult> GetTrack(string name, DateTime? date = null, int? skip = null, string appId = null)
 		{
 			int skip2 = 0;
 			if (skip.HasValue)
@@ -87,18 +87,12 @@ namespace Perfon.Mvc.Controllers
 			if (res == null || res.Count() <= 0)
 			{
 				// Not the best solution. Use Lazy here??
-				res = await Db.QueryCounterValues(name, date, skip2);
+				res = await Db.QueryCounterValues(name, date, skip2, appId);
                 if (res != null)
                 {
                     MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(3)));
                 }
 			}
-
-            //if (res != null && skip2 > 0)
-            //{
-            //    res = res.Skip(skip2).ToList();
-            //}
-
 
 			return new CustomJsonResult { Data = res };
 			//return new CustomJsonResult(res, JsonRequestBehavior.AllowGet);

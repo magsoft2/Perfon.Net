@@ -9,6 +9,9 @@ using Perfon.Interfaces.PerfCounters;
 
 namespace Perfon.Core.Notifications
 {
+    /// <summary>
+    /// Abstract class implementing base functional needed by derivers
+    /// </summary>
     public abstract class ThresholdBaseNotification : IThresholdNotification
     {
         public ThresholdBaseNotification(float thresholdValue, string message = "")
@@ -18,7 +21,7 @@ namespace Perfon.Core.Notifications
 
             if(string.IsNullOrEmpty(Message))
             {
-                Message = "Violated theshould " + ThresholdValue+" :";
+                Message = "Violated theshold " + ThresholdValue+" :";
             }
         }
 
@@ -26,11 +29,28 @@ namespace Perfon.Core.Notifications
 
         public bool IsThresholdViolated { get; protected set; }
 
+        /// <summary>
+        /// Function called by perfofmance counters to check if threshold is ok
+        /// </summary>
+        /// <param name="counter"></param>
+        /// <returns></returns>
         public abstract bool TestThresholdOk(IPerformanceCounter counter);
 
+        /// <summary>
+        /// Event raised after threshold  violation
+        /// </summary>
         public event EventHandler<IThreshouldNotificationEventArg> OnThresholdViolated;
 
+        /// <summary>
+        /// Event raised after threshold violation is gone
+        /// </summary>
         public event EventHandler<IThreshouldNotificationEventArg> OnThresholdViolationRecovered;
+
+        /// <summary>
+        /// Fixed part of information passed to subscribers
+        /// </summary>
+        public string Message { get; protected set; }
+
 
         protected void RaiseThresholdViolated(ThreshouldNotificationEventArg arg)
         {
@@ -47,6 +67,6 @@ namespace Perfon.Core.Notifications
             }
         }
 
-        public string Message { get; protected set; }
+        
     }
 }

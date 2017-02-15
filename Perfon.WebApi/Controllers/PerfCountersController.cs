@@ -24,7 +24,7 @@ namespace Perfon.WebApi
         readonly string keyList = "PerfListCounters";
 
 
-        public IPerfomanceCountersStorage Db
+        private IPerfomanceCountersStorage Db
         {
             get
             {
@@ -67,6 +67,12 @@ namespace Perfon.WebApi
                 skip2 = skip.Value;
             }
 
+            int expirationSec = 3;
+            if (skip2 == 0)
+            {
+                expirationSec = 7;
+            }
+
             string key = name + date.GetHashCode() + skip2.GetHashCode();
             var res = MemoryCache.Default.Get(key) as IEnumerable<IPerfCounterValue>;
 
@@ -74,7 +80,7 @@ namespace Perfon.WebApi
             {
                 // Not the best solution. Use Lazy here??
                 res = await Db.QueryCounterValues(name, date, skip2);
-                MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(3)));
+                MemoryCache.Default.Add(key, res, new DateTimeOffset(DateTime.Now.AddSeconds(expirationSec)));
             }
 
             //if (res != null && skip2 > 0)

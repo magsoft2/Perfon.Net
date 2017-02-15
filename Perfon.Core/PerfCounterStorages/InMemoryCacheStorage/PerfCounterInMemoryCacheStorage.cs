@@ -25,6 +25,8 @@ namespace Perfon.Core.PerfCounterStorages.InMemoryCacheStorage
 
         private StringCollection counterNames { get; set; }
 
+
+
         public PerfCounterInMemoryCacheStorage(long expirationInSeconds=60*60)
         {
             ExpirationInSeconds = expirationInSeconds;
@@ -32,35 +34,7 @@ namespace Perfon.Core.PerfCounterStorages.InMemoryCacheStorage
             counterNames = new StringCollection();
         }
 
-        class DataRowPerTimeStamp
-        {
-            public DataRowPerTimeStamp(DateTime timeStamp)
-            {
-                TimeStamp = timeStamp;
-                CountersValue = new Dictionary<string, float>();
-            }
-
-            public DateTime TimeStamp { get; private set; }
-
-            private Dictionary<string, float> CountersValue { get; set; }
-
-            /// <summary>
-            /// Returns NaN if perf counter name is not found
-            /// </summary>
-            /// <param name="name"></param>
-            /// <returns></returns>
-            internal float TryGetCounterValue(string name)
-            {
-                float res = float.NaN;
-                CountersValue.TryGetValue(name, out res);
-                return res;
-            }
-
-            internal void AddCounterValue(string key, float value)
-            {
-                CountersValue[key] = value;
-            }
-        }
+        
 
         /// <summary>
         /// Awaitable.
@@ -104,6 +78,15 @@ namespace Perfon.Core.PerfCounterStorages.InMemoryCacheStorage
             }
         }
 
+        /// <summary>
+        /// Do not process skip in the function, because results could be incorrect due to expiration. 
+        /// Skip is measured against the start of data series
+        /// </summary>
+        /// <param name="counterName"></param>
+        /// <param name="date"></param>
+        /// <param name="skip"></param>
+        /// <param name="appId"></param>
+        /// <returns></returns>
         public Task<IEnumerable<IPerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip = 0, string appId = null)
         {
             if (!date.HasValue)
@@ -139,6 +122,39 @@ namespace Perfon.Core.PerfCounterStorages.InMemoryCacheStorage
         /// </summary>
         public event EventHandler<IPerfonErrorEventArgs> OnError;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        class DataRowPerTimeStamp
+        {
+            public DataRowPerTimeStamp(DateTime timeStamp)
+            {
+                TimeStamp = timeStamp;
+                CountersValue = new Dictionary<string, float>();
+            }
+
+            public DateTime TimeStamp { get; private set; }
+
+            private Dictionary<string, float> CountersValue { get; set; }
+
+            /// <summary>
+            /// Returns NaN if perf counter name is not found
+            /// </summary>
+            /// <param name="name"></param>
+            /// <returns></returns>
+            internal float TryGetCounterValue(string name)
+            {
+                float res = float.NaN;
+                CountersValue.TryGetValue(name, out res);
+                return res;
+            }
+
+            internal void AddCounterValue(string key, float value)
+            {
+                CountersValue[key] = value;
+            }
+        }
 
     }
 }

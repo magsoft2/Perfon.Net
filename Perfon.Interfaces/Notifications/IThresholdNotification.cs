@@ -8,7 +8,7 @@ using Perfon.Interfaces.PerfCounters;
 namespace Perfon.Interfaces.Notifications
 {
     /// <summary>
-    /// Used for tracking threshold of perf counters.
+    /// Used for tracking threshold violations of perf counters.
     /// It raises notification about threshold violation
     /// </summary>
     public interface IThresholdNotification
@@ -18,12 +18,12 @@ namespace Perfon.Interfaces.Notifications
         bool IsThresholdViolated {get;}
 
         /// <summary>
-        /// Message attached to every notification
+        /// Fixed part of information passed to subscribers
         /// </summary>
         string Message { get; }
 
         /// <summary>
-        /// Returns true if perf counter violates the threshold
+        /// Returns true if perf counter does not violates the threshold
         /// </summary>
         /// <param name="counter"></param>
         /// <returns></returns>

@@ -33,7 +33,7 @@ namespace TestMvcApp
             PerfMonitor.PerfMonitorBase.RequestNum.AddThreshold(thr1);
 
             //Change some default settings if needed
-            PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan =-1;
+            PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan = 0;
             PerfMonitor.Configuration.EnablePerfApi = true; 
             PerfMonitor.Configuration.EnablePerfUIApi = true;
             PerfMonitor.Start(this, RouteTable.Routes, 5);

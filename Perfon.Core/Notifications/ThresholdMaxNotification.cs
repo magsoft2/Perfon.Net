@@ -8,6 +8,9 @@ using Perfon.Interfaces.PerfCounters;
 
 namespace Perfon.Core.Notifications
 {
+    /// <summary>
+    /// Check threshold max value and raise notification about violation
+    /// </summary>
     public class ThresholdMaxNotification : ThresholdBaseNotification
     {
         public ThresholdMaxNotification(float thresholdValue, string message = "")
@@ -15,7 +18,7 @@ namespace Perfon.Core.Notifications
         {
             if(string.IsNullOrEmpty(Message))
             {
-                Message = "Theshould max value " + ThresholdValue+" ";
+                Message = "Theshold max value " + ThresholdValue+" ";
             }
         }
 

@@ -17,7 +17,7 @@ namespace Perfon.WebApi
 {
     /// <summary>
     /// Wrapper on PerfMonitor for Web Api.
-    /// It registers filters and handlers thus tracking request counters.
+    /// It registers filters and handlers thus tracking of request counters.
     /// </summary>
     public class PerfMonitorForWebApi
     {
@@ -132,7 +132,26 @@ namespace Perfon.WebApi
         /// Need to be removed
         /// Inject it into controller!
         /// </summary>
-        public IPerfomanceCountersStorage Storage { get; private set; }
+        internal IPerfomanceCountersStorage Storage { get; private set; }
+
+
+        /// Get counter history track for specified date
+        /// Skip is used for periodic polling, allowing to get only recent values not recieved yet
+        /// Awaitable
+        /// </summary>
+        /// <param name="counterName"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public Task<IEnumerable<IPerfCounterValue>> QueryCounterValues(string counterName, DateTime? date = null, int skip = 0, string appId = null)
+        {
+            if (Storage != null)
+            {
+                return Storage.QueryCounterValues(counterName, date, skip, appId);
+            }
+
+            return null;
+        }
+ 
 
 
         private HttpConfiguration cfg = null;

@@ -8,7 +8,7 @@ using Perfon.Interfaces.Common;
 namespace Perfon.Core.Common
 {
     /// <summary>
-    /// Used for reporting errors occured inside PerfMonLib to clients
+    /// Used for reporting errors occured inside Perfon to clients
     /// </summary>
     public class PerfonErrorEventArgs : EventArgs, IPerfonErrorEventArgs
     {

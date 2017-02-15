@@ -10,6 +10,7 @@ namespace Perfon.Core.Common
     {
         /// <summary>
         /// Knuth hash
+        /// Do not rely on standard GetHashCode because it could have diff implementations
         /// </summary>
         /// <param name="read"></param>
         /// <returns></returns>

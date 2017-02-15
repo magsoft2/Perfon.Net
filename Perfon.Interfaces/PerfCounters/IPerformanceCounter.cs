@@ -72,7 +72,9 @@ namespace Perfon.Interfaces.PerfCounters
         void Increment();
 
         /// <summary>
-        /// Reset counter value to 0
+        /// Reset counter value to 0.
+        /// TODO: pass new poll period for adaptive polling.
+        /// Poll period is fixed between polls.
         /// Thread safe
         /// </summary>
         void Reset(long? newPollingPeriod = null);

@@ -9,7 +9,7 @@
     <projectUrl>http://perfon.1gb.ru/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Support of MySQL for perfomance counters data storing.</releaseNotes>
+    <releaseNotes>Bug fixes. Survived .Net Memory Perf counter has been added.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Performance Monitoring .Net </tags>
   </metadata>

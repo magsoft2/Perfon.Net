@@ -24,12 +24,20 @@ namespace Perfon.Core.Common
 
         /// <summary>
         /// Enables getting perf counters from Web Api controller using api/perfcounters
+        /// Disabled by default.
         /// </summary>
         public bool EnablePerfApi { get; set; }
         /// <summary>
         /// Enables getting UI html page for view perf counters from Web Api controller using api/perfcountersui and api/perfcountersuipanel
+        /// Disabled by default.
         /// </summary>        
         public bool EnablePerfUIApi { get; set; }
+
+        /// <summary>
+        /// Enable CPU time monitoring
+        /// Enabled by default.
+        /// </summary>
+        public bool EnableMonitoringCpuTime {get;set;}
 
         /// <summary>
         /// Do not store perf counter poll results if count of requests is less or equal to this setting

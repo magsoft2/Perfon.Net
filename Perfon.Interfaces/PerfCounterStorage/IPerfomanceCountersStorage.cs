@@ -15,6 +15,8 @@ namespace Perfon.Interfaces.PerfCounterStorage
         /// <summary>
         /// Store a list of perf counter values,
         /// with optional TimeStamp and AppId
+        /// Driver should try ro use bulk insert
+        /// Awaitable
         /// </summary>
         /// <param name="counters"></param>
         /// <returns></returns>
@@ -22,6 +24,8 @@ namespace Perfon.Interfaces.PerfCounterStorage
 
         /// <summary>
         /// Get counter history track for specified date
+        /// Skip is used for periodic polling, allowing to get only recent values not recieved yet
+        /// Awaitable
         /// </summary>
         /// <param name="counterName"></param>
         /// <param name="date"></param>

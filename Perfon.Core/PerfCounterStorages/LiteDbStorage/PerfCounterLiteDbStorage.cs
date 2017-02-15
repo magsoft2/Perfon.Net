@@ -39,6 +39,7 @@ namespace Perfon.Core.PerfCounterStorages
         /// Awaitable.
         /// Stores perf counters into LiteDb file.
         /// One file per date
+        /// Hope, LiteDb will support async features somewhen
         /// </summary>
         /// <param name="counters"></param>
         /// <returns></returns>
@@ -107,14 +108,6 @@ namespace Perfon.Core.PerfCounterStorages
                         {
                             try
                             {
-                                //var col = names.Find(Query.EQ("Name", counter.Name)).FirstOrDefault();
-                                //if (col == null)
-                                //{
-                                //    var doc = new BsonDocument();
-                                //    doc.Add("Name", counter.Name);
-                                //    names.Insert(doc);
-                                //}
-
                                 int collId = (short)(Tools.CalculateHash(counter.Name) % (ulong)short.MaxValue);
                                 int blockId = now.Hour * 12 + now.Minute / 5;
                                 int docId = collId + blockId.GetHashCode();
@@ -242,26 +235,13 @@ namespace Perfon.Core.PerfCounterStorages
         }
         private string GetDbReadOnlyName(DateTime date)
         {
-            //return  GetDbName(date);
+            string journal = ";Journal=false";
 
-            string journal = "";
-            //if (date.Date != DateTime.Now.Date)
-            {
-                journal = ";Journal=false";
-            }
-            //;Mode=ReadOnly
             return "Filename=" + GetDbName(date) + journal + ";Mode=ReadOnly";//;Timeout=" + TimeSpan.FromSeconds(30);
         }
         private string GetDbWriteName(DateTime date)
         {
             return GetDbName(date);
-
-            string journal = "";
-            //if (date.Date != DateTime.Now.Date)
-            {
-                // journal = ";Journal=false";
-            }
-            return "Filename=" + GetDbName(date) + journal;
         }
 
 

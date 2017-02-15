@@ -24,11 +24,12 @@ namespace TestServer
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
             
-
+            ///Create perf monitor engine
             PerfMonitor = new PerfMonitorForWebApi();
+
+            // Register storage
             var storageType = ConfigurationManager.AppSettings["StorageType"];
             var storageConnString = ConfigurationManager.AppSettings["StorageConnectionString"];
-
             if (storageType == null || storageType == null)
             {
                 //PerfMonitor.RegisterCSVFileStorage(AppDomain.CurrentDomain.BaseDirectory + "\\" + ConfigurationManager.AppSettings["DB_Path"]);
@@ -49,7 +50,10 @@ namespace TestServer
                 }
             }
 
+            //Suscribe on error events
             PerfMonitor.OnError += PerfMonitor_OnError; 
+
+            //Create and subscribe on perf counter value threshold violation events
             var thr1 = new ThresholdMaxNotification(500);
             thr1.OnThresholdViolated += (a, b) => Console.WriteLine(b.Message);
             thr1.OnThresholdViolationRecovered += (a, b) => Console.WriteLine(b.Message);
@@ -59,6 +63,8 @@ namespace TestServer
             PerfMonitor.Configuration.DoNotStorePerfCountersIfReqLessOrEqThan = 0; //Do not store perf values if RequestsNum = 0 during poll period
             PerfMonitor.Configuration.EnablePerfApi = true; // Enable getting perf values by API GET addresses 'api/perfcounters' and  'api/perfcounters/{name}'
             PerfMonitor.Configuration.EnablePerfUIApi = true; // Enable getting UI html page with perf counters values by API GET 'api/perfcountersui' or 'api/perfcountersuipanel'
+            
+            // Start counters polling
             PerfMonitor.Start(GlobalConfiguration.Configuration, 10);
             
         }

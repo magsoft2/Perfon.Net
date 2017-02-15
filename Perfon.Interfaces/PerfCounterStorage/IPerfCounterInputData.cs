@@ -27,6 +27,5 @@ namespace Perfon.Interfaces.PerfCounterStorage
         /// Used for CVS Storage for example
         /// </summary>
         string FormattedValue { get; }
-        //DateTime TimeStamp { get; }
     }
 }

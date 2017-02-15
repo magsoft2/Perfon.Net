@@ -9,7 +9,7 @@
     <projectUrl>http://perfon.1gb.ru/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Support of MySQL for perfomance counters data storing.</releaseNotes>
+    <releaseNotes>Bug fixes. Survived .Net Memory Perf counter has been added</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Performance Monitoring Web Api .Net </tags>
 	<dependencies>
@@ -18,7 +18,7 @@
 	  <dependency id="Microsoft.AspNet.WebApi.Core" version="5.2.3"/>
 	  <dependency id="Microsoft.AspNet.WebApi.Client" version="5.2.3" />
 	  <dependency id="Microsoft.AspNet.WebApi.Cors" version="5.2.3"/>
-      <dependency id="Perfon.Core" version="1.0.4" />
+      <dependency id="Perfon.Core" version="1.0.7" />
     </dependencies>
   </metadata>
 </package>

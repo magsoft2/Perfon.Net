@@ -8,22 +8,32 @@ using Perfon.Interfaces.PerfCounterStorage;
 
 namespace Perfon.Core.PerfCounters
 {
+    /// <summary>
+    /// Data for passing to Storages
+    /// </summary>
     public class PerfCounterInputData : IPerfCounterInputData
     {
-        public PerfCounterInputData(string name, float value, string formattedValue) //, DateTime timeStamp)
+        public PerfCounterInputData(string name, float value, string formattedValue = "")
         {
             Name = name;
             Value = value;
             FormattedValue = formattedValue;
-            //TimeStamp = timeStamp;
         }
 
+        /// <summary>
+        /// Counter name
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Optional
+        /// </summary>
         public string FormattedValue { get; private set; }
 
+        /// <summary>
+        /// Counter value
+        /// </summary>
         public float Value { get; set; }
 
-        //public DateTime TimeStamp { get; private set; }
     }
 }

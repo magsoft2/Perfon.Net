@@ -123,7 +123,9 @@ namespace Perfon.Core.PerfCounters
             return new PerfCounterInputData(Name, GetValue(), GetFormattedValue());
         }
 
-
+        /// <summary>
+        /// Counter value, for internal usage
+        /// </summary>
         protected long _value;
 
         protected long Value
