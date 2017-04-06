@@ -9,7 +9,7 @@
     <projectUrl>http://perfon.1gb.ru/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Bug fixes. Survived .Net Memory Perf counter has been added</releaseNotes>
+    <releaseNotes>Bug fixes.</releaseNotes>
     <copyright>$copyright$</copyright>
     <tags>Performance Monitoring Web Api .Net </tags>
 	<dependencies>

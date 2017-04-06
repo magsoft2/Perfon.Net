@@ -65,7 +65,7 @@ namespace TestServer
             PerfMonitor.Configuration.EnablePerfUIApi = true; // Enable getting UI html page with perf counters values by API GET 'api/perfcountersui' or 'api/perfcountersuipanel'
             
             //Register Windows Perf Counters if neede
-            PerfMonitor.PerfMonitorBase.AddWindowsPerfCounter("% Processor Time", "_Total");
+            //PerfMonitor.PerfMonitorBase.AddWindowsPerfCounter("% Processor Time", "_Total");
 
             // Start counters polling
             PerfMonitor.Start(GlobalConfiguration.Configuration, 5);
