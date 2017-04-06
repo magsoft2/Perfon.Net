@@ -23,16 +23,20 @@ namespace Perfon.Core.PerfCounters
         /// Get current perf counter value
         /// </summary>
         /// <returns></returns>
-        public override float GetValue()
+        public override float GetValue(bool resetAfterRead = false)
         {
-            if (ReversedPeriodValue != 0)
+            float res = PostProcessMultiplyCoeff * (float)Value * ReversedPeriodValue;
+            if (ReversedPeriodValue == 0)
             {
-                return PostProcessMultiplyCoeff * (float)Value * ReversedPeriodValue;
+                res = PostProcessMultiplyCoeff * (float)Value;
             }
-            else
+
+            if (resetAfterRead)
             {
-                return PostProcessMultiplyCoeff * (float)Value;
+                Reset();
             }
+
+            return res;
         }
         
     }

@@ -16,6 +16,8 @@ namespace Perfon.Core.Common
             EnablePerfApi = false;
             EnablePerfUIApi = false;
 
+            EnableMonitoringCpuTime = true;
+
             DoNotStorePerfCountersIfReqLessOrEqThan = 0;
 
             MinPollPeriod = null;

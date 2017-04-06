@@ -102,6 +102,10 @@ namespace Perfon.Core
         /// Used by storage drivers.
         /// </summary>
         public List<IPerformanceCounter> countersListGeneric = new List<IPerformanceCounter>();
+        /// <summary>
+        /// A list of windows counters
+        /// </summary>
+        private List<IPerformanceCounter> windowsPerfCountersList = new List<IPerformanceCounter>();
 
         /// <summary>
         /// Register Perf Counter implemented by user. Custom Perf Counter.
@@ -113,6 +117,13 @@ namespace Perfon.Core
         {
             countersList.Add(counter.Name, counter);
             countersListGeneric.Add(counter);
+        }
+        public void AddWindowsPerfCounter(string counterName, string instance)
+        {
+            var counter = new PerformanceSumCounter(counterName);
+            countersList.Add(counter.Name, counter);
+            countersListGeneric.Add(counter);
+            windowsPerfCountersList.Add(counter);
         }
         /// <summary>
         /// Retrieve perf counter and process its value.
@@ -235,8 +246,6 @@ namespace Perfon.Core
             PollPeriod_ms = pollPeriod_sec*1000;
             PollPeriod_RevSec = 1.0f / (PollPeriod_ms/1000.0f);
 
-            //Tune perf counters scale coefficients
-            cpuUsage.PostProcessMultiplyCoeff = 100 * 1.0f / 1000 * PollPeriod_RevSec;
             //Notify all counters about poll period value
             foreach (var item in countersList.Values)
             {
@@ -389,16 +398,16 @@ namespace Perfon.Core
                 double count = requestNum.GetValue();
                 if (count > Configuration.DoNotStorePerfCountersIfReqLessOrEqThan)
                 {
-                    var listTemp = countersListGeneric.Select(a =>a.GetPerfCounterData()).ToList();
+                    var listTemp = countersListGeneric.Select(a =>a.GetPerfCounterData(true)).ToList();
                     
                     ///Note that it is not ideal solution!
                     ///Ideally, storing and resetting should be locked in one section for exact precise counter values, 
                     ///   and increment should use the same lock object!
                     ///But for our purposes precision is enough, for polling periods ~1sec 
-                    foreach (var item in countersListGeneric)
-                    {
-                        item.Reset();
-                    }
+                    //foreach (var item in countersListGeneric)
+                    //{
+                    //    item.Reset();
+                    //}
                     
                     //Stopwatch sw = Stopwatch.StartNew();
                     foreach (var item in storagesList)
@@ -422,6 +431,8 @@ namespace Perfon.Core
             }
         }
 
+        System.Diagnostics.PerformanceCounter myCounter = new System.Diagnostics.PerformanceCounter(); 
+                
         private void CollectInternalCounters()
         {
             memoryUsed.Add(GC.GetTotalMemory(false));
@@ -432,7 +443,19 @@ namespace Perfon.Core
             {
                 memorySurvived.Add(AppDomain.CurrentDomain.MonitoringSurvivedMemorySize);
 
-                cpuUsage.Add((long)AppDomain.CurrentDomain.MonitoringTotalProcessorTime.TotalMilliseconds/Environment.ProcessorCount);
+                cpuUsage.Add((long)(AppDomain.CurrentDomain.MonitoringTotalProcessorTime.TotalMilliseconds*100/PollPeriod_ms/Environment.ProcessorCount));
+
+            }
+
+            //Collect windows perf counters
+            foreach (var item in windowsPerfCountersList)
+            {
+                myCounter.CategoryName = "Process"; 
+                myCounter.CounterName = item.Name;
+                myCounter.InstanceName = Process.GetCurrentProcess().ProcessName; 
+                var raw = (long)(myCounter.NextValue());
+
+                item.Add(raw);
             }
         }
     }

@@ -133,11 +133,7 @@ License: MIT
 --
 
 ### TODO:
-* Add description of options and conventions
-* Add more perf counters (GC time )
 * Add example of implementing custom counter
 * Add example of implementing own IPerfCountersStorage
 * Example of using&implementing NotificationRecievers
-* Add comparison with win perf counters values (Kb/sec, CPU%, req/sec)
 * Add support of Asp.Net Core? Compare with MS Application Insights (Cons: It needs registration on Azure)
-* Cache based on tags?

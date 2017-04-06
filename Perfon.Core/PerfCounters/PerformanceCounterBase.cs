@@ -93,16 +93,20 @@ namespace Perfon.Core.PerfCounters
         /// Get current perf counter value
         /// </summary>
         /// <returns></returns>
-        public virtual float GetValue()
+        public virtual float GetValue(bool resetAfterRead = false)
         {
-            if (ReversedPeriodValue != 0)
+            float res = PostProcessMultiplyCoeff * Value * ReversedPeriodValue;
+            if (ReversedPeriodValue == 0)
             {
-                return PostProcessMultiplyCoeff * Value * ReversedPeriodValue;
+               res = PostProcessMultiplyCoeff * Value;
             }
-            else
+
+            if (resetAfterRead)
             {
-                return PostProcessMultiplyCoeff * Value;
+                Reset();
             }
+
+            return res;
         }
 
 
@@ -118,9 +122,12 @@ namespace Perfon.Core.PerfCounters
         /// Get current counter value, for pass it to Counter Storage
         /// </summary>
         /// <returns></returns>
-        public IPerfCounterInputData GetPerfCounterData()
+        public IPerfCounterInputData GetPerfCounterData(bool resetAfterRead = false)
         {
-            return new PerfCounterInputData(Name, GetValue(), GetFormattedValue());
+            var resFormatted =  GetFormattedValue();
+            var res1 = GetValue(resetAfterRead);
+
+            return new PerfCounterInputData(Name, res1, resFormatted);
         }
 
         /// <summary>

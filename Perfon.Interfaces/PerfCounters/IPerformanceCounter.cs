@@ -40,7 +40,7 @@ namespace Perfon.Interfaces.PerfCounters
         /// Thread safe
         /// </summary>
         /// <returns></returns>
-        float GetValue();
+        float GetValue(bool resetAfterRead = false);
 
         /// <summary>
         /// Return value as formatted string, using FormatString
@@ -83,6 +83,6 @@ namespace Perfon.Interfaces.PerfCounters
         /// Get current counter value, for pass it to Counter Storage
         /// </summary>
         /// <returns></returns>
-        IPerfCounterInputData GetPerfCounterData();
+        IPerfCounterInputData GetPerfCounterData(bool resetAfterRead = false);
     }
 }

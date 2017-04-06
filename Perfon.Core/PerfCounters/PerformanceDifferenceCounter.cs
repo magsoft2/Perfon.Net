@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -23,7 +24,7 @@ namespace Perfon.Core.PerfCounters
         /// </summary>
         public override void Increment()
         {
-            
+
         }
 
         /// <summary>
@@ -35,6 +36,7 @@ namespace Perfon.Core.PerfCounters
             ///Not very good, better to do - lock the whole function body
             Interlocked.Exchange(ref prevValue, Value);
             Interlocked.Exchange(ref _value, addValue);
+
         }
 
         /// <summary>
@@ -52,9 +54,16 @@ namespace Perfon.Core.PerfCounters
         /// Get current perf counter value
         /// </summary>
         /// <returns></returns>
-        public override float GetValue()
+        public override float GetValue(bool resetAfterRead = false)
         {
-             return PostProcessMultiplyCoeff * (Value - Interlocked.Read(ref prevValue));
+            var res = PostProcessMultiplyCoeff * (Value - Interlocked.Read(ref prevValue));
+
+            if (resetAfterRead)
+            {
+                Reset();
+            }
+
+            return res;
         }
 
         private long prevValue = 0;
