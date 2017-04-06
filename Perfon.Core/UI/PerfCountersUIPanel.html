@@ -265,38 +265,46 @@
             }
             getPerfCounterTrack(name, date, self.dataArray.length).then(function(data)
             {
-                var nowZ = 0;
-                if(data.length>0 && data[data.length-1].Timestamp.indexOf('Z') < 0)
-                {
-                    nowZ = new Date().getTimezoneOffset()* 60 * 1000;
-                }
-                if(data !== undefined && data instanceof Array)
-                {
-                    var lastTime = new Date();
-                    for(let i=0;i<data.length;i++)
+                try{
+                    if(data !== undefined && data instanceof Array)
                     {
-                        var dt = new Date(data[i].Timestamp);
-                        lastTime = new Date(dt.valueOf() + nowZ   ); //Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes(), dt.getSeconds(), dt.getMilliseconds()));
-                        self.dataArray.push([lastTime, data[i].Value]);
-                    }
-                    var startRange=new Date(lastTime.valueOf()-1000*60*15);
-                    if(graph.dateWindow_ !== undefined && graph.dateWindow_ !== null &&graph.dateWindow_.length > 0)
-                    {
-                        if(new Date(graph.dateWindow_[0]).getDate() == lastTime.getDate())
+                        var nowZ = 0;
+                        if(data.length>0 && data[data.length-1].Timestamp !== undefined && data[data.length-1].Timestamp.indexOf('Z') < 0)
                         {
-                            startRange = graph.dateWindow_[0];
+                            nowZ = new Date().getTimezoneOffset()* 60 * 1000;
                         }
+                        var lastTime = new Date();
+                        for(let i=0;i<data.length;i++)
+                        {
+                            if(data[i].Timestamp !== undefined)
+                            {
+                                var dt = new Date(data[i].Timestamp);
+                                lastTime = new Date(dt.valueOf() + nowZ   ); //Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate(), dt.getHours(), dt.getMinutes(), dt.getSeconds(), dt.getMilliseconds()));
+                                self.dataArray.push([lastTime, data[i].Value]);
+                            }
+                        }
+                        var startRange=new Date(lastTime.valueOf()-1000*60*15);
+                        if(graph.dateWindow_ !== undefined && graph.dateWindow_ !== null &&graph.dateWindow_.length > 0)
+                        {
+                            if(new Date(graph.dateWindow_[0]).getDate() == lastTime.getDate())
+                            {
+                                startRange = graph.dateWindow_[0];
+                            }
+                        }
+                        graph.updateOptions({
+                            //title: name,
+                            'file': self.dataArray,
+                            dateWindow:[startRange, lastTime]
+                        });                    
+                    }else{
+                        self.dataArray = [];
+                        graph.updateOptions({
+                            'file': self.dataArray
+                        });
                     }
-                    graph.updateOptions({
-                        //title: name,
-                        'file': self.dataArray,
-                        dateWindow:[startRange, lastTime]
-                    });                    
-                }else{
-                    self.dataArray = [];
-                    graph.updateOptions({
-                        'file': self.dataArray
-                    });
+                }catch(err)
+                {
+                    console.log('error in getPerfCounterTrack: '+err);
                 }
                 
             });
